@@ -1,0 +1,120 @@
+// ═══════════════════════════════════════
+//  PAPA RAS — 7 AI-агентов скоринга
+//  PAPA Score = Σ(Wi × Li) × Corr × Macro
+// ═══════════════════════════════════════
+
+// ── Веса агентов (из презентации) ──
+
+get_weights()
+  return {"L1_finance" -> 0.30, "L2_business" -> 0.20, "L3_health" -> 0.07, "L4_psycho" -> 0.07, "L5_social" -> 0.12, "L6_macro" -> 0.12, "L7_geolegal" -> 0.07}
+
+// ── Агенты (упрощённые) ──
+
+score_finance(pd, lgd, kpi_pct)
+  base = 800
+  if pd > 0.15
+    base = base - 200
+  if lgd > 0.5
+    base = base - 150
+  base = base + kpi_pct
+  if base > 1000
+    base = 1000
+  if base < 0
+    base = 0
+  return base
+
+score_business(years, employees, revenue_growth)
+  base = 500
+  if years > 5
+    base = base + 100
+  if years > 10
+    base = base + 100
+  if employees > 50
+    base = base + 100
+  if revenue_growth > 10
+    base = base + 100
+  if base > 1000
+    base = 1000
+  return base
+
+score_macro(gdp_growth, inflation, unemployment)
+  base = 700
+  if gdp_growth < 1
+    base = base - 200
+  if inflation > 10
+    base = base - 150
+  if unemployment > 10
+    base = base - 100
+  if base < 0
+    base = 0
+  return base
+
+// ── Рейтинг ──
+
+calculate_rating(total_score)
+  if total_score >= 950
+    return "AAA"
+  if total_score >= 850
+    return "AA"
+  if total_score >= 750
+    return "A"
+  if total_score >= 650
+    return "BBB"
+  if total_score >= 550
+    return "BB"
+  if total_score >= 450
+    return "B"
+  if total_score >= 350
+    return "CCC"
+  if total_score >= 200
+    return "CC"
+  return "D"
+
+// ── Composite Score ──
+
+calculate_papa_score(finance, business, macro)
+  weights = get_weights()
+  w1 = weights.get("L1_finance").value
+  w2 = weights.get("L2_business").value
+  w6 = weights.get("L6_macro").value
+  remaining = 1.0 - w1 - w2 - w6
+  score = (finance * w1) + (business * w2) + (macro * w6) + (700 * remaining)
+  return score
+
+// ── Тесты ──
+
+test "finance score high"
+  s = score_finance(0.03, 0.2, 80)
+  assert_true(s > 700)
+
+test "finance score low"
+  s = score_finance(0.25, 0.7, 30)
+  assert_true(s < 600)
+
+test "business score mature"
+  s = score_business(12, 100, 15)
+  assert_true(s >= 800)
+
+test "macro score stable"
+  s = score_macro(3.0, 4.0, 5.0)
+  assert_true(s >= 600)
+
+test "rating AAA"
+  assert_eq(calculate_rating(960), "AAA")
+
+test "rating BBB"
+  assert_eq(calculate_rating(680), "BBB")
+
+test "rating D"
+  assert_eq(calculate_rating(100), "D")
+
+test "composite score"
+  finance = score_finance(0.05, 0.3, 70)
+  business = score_business(8, 60, 12)
+  macro = score_macro(2.5, 5.0, 6.0)
+  total = calculate_papa_score(finance, business, macro)
+  rating = calculate_rating(total)
+  assert_true(total > 0)
+  assert_true(total <= 1000)
+
+say "📊 PAPA RAS — 8 tests"

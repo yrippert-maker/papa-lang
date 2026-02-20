@@ -1,0 +1,22 @@
+// ═══════════════════════════════════════
+//  std/design — AI Design Generation
+//  Генерация UI, токенов, компонентов
+// ═══════════════════════════════════════
+
+// design_tokens(theme: text, style: text) -> map
+// theme: "dark" | "light"
+// style: "enterprise" | "startup" | "minimal"
+// Возвращает: цвета, шрифты, spacing
+
+// design_component(name: text, variants: int) -> list
+// Генерирует HTML/React компоненты
+
+// design_palette(primary: text) -> map
+// Генерирует цветовую палитру из primary цвета
+
+// design_review(description: text) -> map
+// AI-анализ UI: accessibility, UX, рекомендации
+
+// design_layout(page_type: text) -> map
+// page_type: "landing" | "dashboard" | "admin" | "form"
+// Возвращает структуру layout

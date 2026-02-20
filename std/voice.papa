@@ -1,0 +1,29 @@
+// ═══════════════════════════════════════
+//  std/voice — Голосовые вызовы
+//  Telnyx / Twilio API интеграция
+// ═══════════════════════════════════════
+
+// Конфигурация провайдера
+// voice_config(provider: text, api_key: secret)
+// provider: "telnyx" | "twilio"
+
+// Совершить звонок
+// voice_call(to: text, message: text) -> map
+// Возвращает: {"call_id", "status", "duration"}
+
+// Отправить SMS
+// voice_sms(to: text, message: text) -> map
+// Возвращает: {"message_id", "status"}
+
+// Транскрипция аудио (Whisper API)
+// voice_transcribe(audio_url: text) -> text
+// Возвращает текст из аудио
+
+// Text-to-Speech
+// voice_tts(text_input: text, voice: text) -> map
+// voice: "alloy" | "echo" | "nova" | "shimmer"
+// Возвращает: {"audio_url", "duration"}
+
+// Статус звонка
+// voice_status(call_id: text) -> map
+// Возвращает: {"status", "duration", "cost"}

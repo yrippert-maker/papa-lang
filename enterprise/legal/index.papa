@@ -1,0 +1,102 @@
+// ═══════════════════════════════════════
+//  PAPA Legal — Право · Санкции · Compliance
+// ═══════════════════════════════════════
+
+// ── Модели ──
+model SanctionEntry
+  entity_name: text
+  country: text
+  list_source: text
+
+model ComplianceCheck
+  entity: text
+  status: text
+  risk_level: text
+
+// ── Санкционная проверка ──
+
+check_sanctions(entity_name, country)
+  // Simplified: check against known high-risk countries
+  high_risk = ["NK", "IR", "SY", "CU"]
+  is_sanctioned = false
+  for c in high_risk
+    if c == country
+      is_sanctioned = true
+  risk = "low"
+  if is_sanctioned
+    risk = "critical"
+  return {"entity" -> entity_name, "country" -> country, "sanctioned" -> is_sanctioned, "risk" -> risk}
+
+// ── ПОД/ФТ (Anti Money Laundering) ──
+
+aml_check(amount, frequency, country)
+  risk_score = 0
+  if amount > 100000
+    risk_score = risk_score + 30
+  if amount > 500000
+    risk_score = risk_score + 30
+  if frequency > 10
+    risk_score = risk_score + 20
+  high_risk = ["NK", "IR", "SY"]
+  for c in high_risk
+    if c == country
+      risk_score = risk_score + 40
+  status = "clear"
+  if risk_score >= 50
+    status = "review"
+  if risk_score >= 80
+    status = "block"
+  return {"risk_score" -> risk_score, "status" -> status}
+
+// ── Compliance Assessment ──
+
+compliance_score(has_kyc, has_aml, has_sanctions_check, has_pep_check)
+  mut score = 0
+  if has_kyc
+    score = score + 25
+  if has_aml
+    score = score + 25
+  if has_sanctions_check
+    score = score + 25
+  if has_pep_check
+    score = score + 25
+  status = "non_compliant"
+  if score >= 75
+    status = "compliant"
+  if score == 100
+    status = "fully_compliant"
+  return {"score" -> score, "status" -> status}
+
+// ── Тесты ──
+
+test "sanctions clean"
+  result = check_sanctions("ACME Corp", "DE")
+  assert_false(result.get("sanctioned").value)
+  assert_eq(result.get("risk").value, "low")
+
+test "sanctions hit"
+  result = check_sanctions("Bad Actor", "NK")
+  assert_true(result.get("sanctioned").value)
+  assert_eq(result.get("risk").value, "critical")
+
+test "AML clear"
+  result = aml_check(5000, 2, "DE")
+  assert_eq(result.get("status").value, "clear")
+
+test "AML review"
+  result = aml_check(200000, 15, "AE")
+  assert_eq(result.get("status").value, "review")
+
+test "AML block"
+  result = aml_check(600000, 12, "IR")
+  assert_eq(result.get("status").value, "block")
+
+test "compliance full"
+  result = compliance_score(true, true, true, true)
+  assert_eq(result.get("status").value, "fully_compliant")
+
+test "compliance partial"
+  result = compliance_score(true, true, false, false)
+  assert_eq(result.get("status").value, "non_compliant")
+
+say "⚖️ PAPA Legal — 7 tests"

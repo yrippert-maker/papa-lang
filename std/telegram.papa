@@ -1,0 +1,11 @@
+// ═══════════════════════════════════════
+//  std/telegram — Telegram Bot API
+//  Альтернативная точка входа в PAPA Ecosystem
+// ═══════════════════════════════════════
+
+// tg_config(bot_token: secret) -> map
+// tg_send(chat_id: text, message: text) -> map
+// tg_send_file(chat_id: text, file_path: text, caption: text) -> map
+// tg_webhook(url: text) -> map
+// tg_parse_command(text: text) -> map
+// tg_keyboard(buttons: list) -> map

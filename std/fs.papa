@@ -1,0 +1,9 @@
+// PAPA Lang std/fs — файловая система
+// Реализовано встроенно в интерпретаторе (import "std/fs")
+//
+// Функции:
+//   read_file(path)   — прочитать файл → maybe(text)
+//   write_file(path, content) — записать файл
+//   file_exists(path) — проверить существование → bool
+//   list_dir(path)    — содержимое директории → list
+//   delete_file(path) — удалить файл

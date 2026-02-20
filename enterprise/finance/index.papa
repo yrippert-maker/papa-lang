@@ -1,0 +1,91 @@
+// ═══════════════════════════════════════
+//  PAPA Finance — Учёт · KPI · IFRS 9
+//  Enterprise Module Skeleton
+// ═══════════════════════════════════════
+
+import "std/time"
+import "std/json"
+
+// ── Модели ──
+model Transaction
+  amount: float
+  currency: text
+  counterparty: text
+  category: text
+
+model KPI
+  name: text
+  value: float
+  target: float
+  period: text
+
+// ── Функции ──
+
+create_transaction(amount, currency, counterparty, category)
+  tx_id = str(amount) + "_" + counterparty + "_" + str(timestamp())
+  tx = Transaction.create(amount: amount, currency: currency, counterparty: counterparty, category: category)
+  return {"id" -> tx_id, "amount" -> amount, "currency" -> currency, "status" -> "created"}
+
+calculate_kpi(name, value, target)
+  pct = (value / target) * 100
+  status = "green"
+  if pct < 70
+    status = "red"
+  if pct >= 70
+    if pct < 90
+      status = "yellow"
+  return {"name" -> name, "value" -> value, "target" -> target, "percent" -> pct, "status" -> status}
+
+// PD (Probability of Default) — упрощённый
+calculate_pd(score, income, debt)
+  ratio = debt / income
+  base_pd = 0.05
+  if ratio > 0.5
+    base_pd = 0.15
+  if ratio > 0.8
+    base_pd = 0.35
+  if score < 600
+    base_pd = base_pd + 0.10
+  return base_pd
+
+// ECL (Expected Credit Loss) — IFRS 9 Stage
+ecl_stage(days_past_due)
+  if days_past_due <= 30
+    return "Stage 1"
+  if days_past_due <= 90
+    return "Stage 2"
+  return "Stage 3"
+
+// ── Тесты ──
+
+test "create transaction"
+  tx = create_transaction(1000.0, "USD", "ACME Corp", "revenue")
+  assert_eq(tx.get("status").value, "created")
+  assert_eq(tx.get("amount").value, 1000.0)
+
+test "KPI calculation green"
+  kpi = calculate_kpi("Revenue", 95.0, 100.0)
+  assert_eq(kpi.get("status").value, "green")
+
+test "KPI calculation red"
+  kpi = calculate_kpi("Revenue", 50.0, 100.0)
+  assert_eq(kpi.get("status").value, "red")
+
+test "PD calculation low risk"
+  pd = calculate_pd(750, 100000, 20000)
+  assert_true(pd < 0.10)
+
+test "PD calculation high risk"
+  pd = calculate_pd(500, 50000, 45000)
+  assert_true(pd > 0.30)
+
+test "ECL Stage 1"
+  assert_eq(ecl_stage(15), "Stage 1")
+
+test "ECL Stage 2"
+  assert_eq(ecl_stage(60), "Stage 2")
+
+test "ECL Stage 3"
+  assert_eq(ecl_stage(120), "Stage 3")
+
+say "💰 PAPA Finance — 8 tests"

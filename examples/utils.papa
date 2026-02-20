@@ -1,0 +1,3 @@
+// Утилиты для демонстрации импорта
+double(n: int) -> int = n * 2
+greet(name: text) -> text = "Hello, {name}!"

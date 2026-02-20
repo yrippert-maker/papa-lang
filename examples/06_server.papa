@@ -1,0 +1,28 @@
+// ═══════════════════════════════════════════
+// PAPA Lang v0.3 — HTTP сервер
+// ═══════════════════════════════════════════
+
+say "🚀 PAPA Lang v0.3 — HTTP Server"
+say ""
+
+serve on port 8200
+
+route GET "/"
+  do
+    return "Hello from PAPA Lang!"
+
+route GET "/health"
+  do
+    return {status -> "ok", version -> "0.3"}
+
+route GET "/users/:id"
+  do
+    return "User {id}"
+
+route POST "/echo"
+  do
+    return body
+
+say ""
+say "Все маршруты зарегистрированы ✅"
+say "Запуск: python3 papa.py serve examples/06_server.papa"

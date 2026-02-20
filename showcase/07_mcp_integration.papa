@@ -1,0 +1,59 @@
+// ═══════════════════════════════════════
+//  PAPA MCP Integration — Composio + n8n
+// ═══════════════════════════════════════
+
+import "std/mcp"
+
+say "🔌 PAPA MCP Integration"
+say ""
+
+// ── Подключение ──
+conn = mcp_connect("https://mcp.composio.dev", secret("composio-key"))
+say "MCP: {conn.get("status").value}, tools: {conn.get("tools_count").value}"
+
+// ── Инструменты ──
+tools = mcp_tools()
+say "Available: {tools.count} tools"
+
+// ── Email ──
+email = mcp_email_send("partner@example.com", "PAPA Ecosystem Demo", "Здравствуйте, приглашаем на демо PAPA Platform")
+say "Email: {email.get("status").value} → {email.get("to").value}"
+
+inbox = mcp_email_read(3)
+say "Inbox: {inbox.count} messages"
+
+// ── Календарь ──
+event = mcp_calendar_create("PAPA Demo Meeting", "2026-03-15", "14:00")
+say "Calendar: {event.get("title").value} at {event.get("time").value}"
+
+schedule = mcp_calendar_list(7)
+say "This week: {schedule.count} events"
+
+// ── Тесты ──
+
+test "mcp connect"
+  c = mcp_connect("http://localhost:3000", secret("key"))
+  assert_eq(c.get("status").value, "connected")
+
+test "mcp tools list"
+  t = mcp_tools()
+  assert_true(t.count > 0)
+
+test "mcp email send"
+  e = mcp_email_send("test@test.com", "Subject", "Body")
+  assert_eq(e.get("status").value, "sent")
+
+test "mcp email read"
+  msgs = mcp_email_read(3)
+  assert_eq(msgs.count, 3)
+
+test "mcp calendar create"
+  ev = mcp_calendar_create("Meeting", "2026-01-01", "10:00")
+  assert_eq(ev.get("status").value, "created")
+
+test "mcp calendar list"
+  evs = mcp_calendar_list(7)
+  assert_true(evs.count > 0)
+
+say ""
+say "🔌 MCP Integration — 6 tests"

@@ -1,0 +1,54 @@
+// ═══════════════════════════════════════════
+// PAPA Lang v0.4 — Стандартная библиотека
+// ═══════════════════════════════════════════
+
+import "std/math"
+import "std/string"
+import "std/json"
+
+say "=== std/math ==="
+say "sqrt(16) = {sqrt(16)}"
+say "pi = {pi}"
+say "sin(pi / 2) = {sin(pi / 2)}"
+say "random: {random()}"
+say "pow(2, 10) = {pow(2, 10)}"
+say "floor(3.7) = {floor(3.7)}"
+say "ceil(3.2) = {ceil(3.2)}"
+
+say ""
+say "=== std/string ==="
+text = "  Hello, PAPA Lang!  "
+say "trim: '{trim(text)}'"
+say "upper: '{upper(text)}'"
+say "lower: '{lower(text)}'"
+ab = "ab"
+rep_result = repeat_str(ab, 5)
+say "repeat: '{rep_result}'"
+hello_str = "Hello"
+rev_result = reverse(hello_str)
+say "reverse: '{rev_result}'"
+forty_two = "42"
+pad_char = "0"
+say "pad_left: '{pad_left(forty_two, 6, pad_char)}'"
+
+say ""
+say "=== std/json ==="
+data = {name -> "PAPA", version -> 0.3}
+encoded = json_encode(data)
+say "JSON: {encoded}"
+decoded = json_decode(encoded)
+say "Decoded: {decoded}"
+
+say ""
+say "=== Тесты std ==="
+
+test "sqrt"
+  assert sqrt(25) == 5.0
+
+test "trim"
+  assert trim("  hello  ") == "hello"
+
+test "json roundtrip"
+  data = {key -> "value"}
+  m = json_decode(json_encode(data))
+  assert m != none()

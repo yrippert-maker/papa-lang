@@ -1,0 +1,24 @@
+// ═══════════════════════════════════════════
+// PAPA Lang v0.3 — Импорты
+// ═══════════════════════════════════════════
+
+say "📦 Демонстрация импортов"
+say ""
+
+import "std/math"
+say "std/math: sqrt(16) = {sqrt(16)}, floor(3.7) = {floor(3.7)}"
+
+from "utils.papa" import double, greet
+say "utils: double(7) = {double(7)}, greet(\"PAPA\") = {greet("PAPA")}"
+
+say ""
+say "✅ Импорты работают"
+
+test "import std/math"
+  import "std/math"
+  assert sqrt(4) == 2
+  assert floor(2.9) == 2
+
+test "from import"
+  from "utils.papa" import double
+  assert double(10) == 20

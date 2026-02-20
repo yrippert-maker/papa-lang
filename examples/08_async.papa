@@ -1,0 +1,19 @@
+// ═══════════════════════════════════════════
+// PAPA Lang v0.3 — Task и Every
+// ═══════════════════════════════════════════
+
+say "⏱️ Демонстрация task и every"
+say ""
+
+task cleanup
+  say "  [Task] Cleaning..."
+  wait 1 seconds
+  say "  [Task] Done"
+
+every 2 seconds
+  say "  [Every] Tick at {now()}"
+
+say "Tasks запущены (сервер бы ждал 3+ сек)"
+wait 3 seconds
+say ""
+say "✅ Task и Every работают"

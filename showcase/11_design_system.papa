@@ -1,0 +1,71 @@
+// ═══════════════════════════════════════
+//  PAPA Design System — AI-powered
+// ═══════════════════════════════════════
+
+import "std/design"
+
+say "🎨 PAPA Design System"
+say ""
+
+// ── Design Tokens ──
+tokens = design_tokens("dark", "enterprise")
+say "Theme: dark/enterprise"
+say "  BG: {tokens.get("bg").value}"
+say "  Accent: {tokens.get("accent").value}"
+say "  Font: {tokens.get("font_heading").value}"
+
+// ── Компоненты ──
+buttons = design_component("button", 3)
+say "Generated: {buttons.count} button variants"
+for btn in buttons
+  say "  → {btn.get("variant").value}: {btn.get("html").value}"
+
+// ── Палитра ──
+palette = design_palette("#7C5CFC")
+say "Palette from {palette.get("primary").value}:"
+say "  Complementary: {palette.get("complementary").value}"
+say "  Dark: {palette.get("primary_dark").value}"
+
+// ── UI Review ──
+review = design_review("Dark enterprise dashboard with forms")
+say "Review: grade={review.get("grade").value}, score={review.get("score").value}"
+say "  Issues: {review.get("issues_count").value}"
+
+// ── Layout ──
+layout = design_layout("dashboard")
+say "Dashboard layout: {layout.get("sections").value}"
+say "  Nav: {layout.get("nav").value}"
+
+// ── Тесты ──
+
+test "design tokens dark enterprise"
+  t = design_tokens("dark", "enterprise")
+  assert_eq(t.get("bg").value, "#09090B")
+  assert_eq(t.get("accent").value, "#7C5CFC")
+
+test "design tokens dark startup"
+  t = design_tokens("dark", "startup")
+  assert_eq(t.get("accent").value, "#3B82F6")
+
+test "design component generation"
+  btns = design_component("button", 3)
+  assert_eq(btns.count, 3)
+
+test "design palette"
+  p = design_palette("#FF0000")
+  assert_eq(p.get("primary").value, "#FF0000")
+
+test "design review"
+  r = design_review("clean interface")
+  assert_true(r.get("score").value > 0)
+
+test "design layout dashboard"
+  l = design_layout("dashboard")
+  assert_eq(l.get("nav").value, "sidebar")
+
+test "design layout landing"
+  l = design_layout("landing")
+  assert_eq(l.get("nav").value, "fixed")
+
+say ""
+say "🎨 Design System — 7 tests"

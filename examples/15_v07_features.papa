@@ -1,0 +1,92 @@
+// ═══════════════════════════════════════
+//  PAPA Lang v0.7 — New Features
+// ═══════════════════════════════════════
+
+say "🆕 PAPA Lang v0.7 Features"
+say ""
+
+// ── Match with blocks ──
+x = 42
+mut result = ""
+match x
+  1 ->
+    result = "one"
+  42 ->
+    result = "answer"
+    result = result + "!"
+  _ ->
+    result = "other"
+say "Match block: {result}"
+
+// ── For with index ──
+items = ["alpha", "beta", "gamma"]
+for i, item in items
+  say "  [{i}] {item}"
+
+// ── Enum ──
+enum Status
+  Active
+  Paused
+  Stopped
+
+say "Enum: {Status.get("Active").value}"
+
+// ── String methods ──
+greeting = "Hello PAPA Lang"
+say "contains 'PAPA': {greeting.contains("PAPA")}"
+say "starts_with 'Hello': {greeting.starts_with("Hello")}"
+
+// ── Tests ──
+say ""
+say "🧪 v0.7 Tests"
+
+test "match with blocks"
+  x = 42
+  mut result = ""
+  match x
+    1 ->
+      result = "one"
+    42 ->
+      result = "answer"
+      result = result + "!"
+    _ ->
+      result = "other"
+  assert_eq(result, "answer!")
+
+test "match single line"
+  x = "hello"
+  mut r = ""
+  match x
+    "hello" -> r = "hi"
+    _ -> r = "?"
+  assert_eq(r, "hi")
+
+test "for with index"
+  items = ["a", "b", "c"]
+  mut collected = ""
+  for i, item in items
+    collected = collected + str(i) + item
+  assert_eq(collected, "0a1b2c")
+
+test "enum"
+  enum Direction
+    North
+    South
+    East
+    West
+  assert_eq(Direction.get("North").value, "North")
+
+test "string contains"
+  assert_true("Hello World".contains("World"))
+  assert_false("Hello World".contains("xyz"))
+
+test "string starts_with ends_with"
+  assert_true("PAPA Lang".starts_with("PAPA"))
+  assert_true("PAPA Lang".ends_with("Lang"))
+
+test "string repeat"
+  assert_eq("ab".repeat(3), "ababab")
+
+test "string index_of"
+  assert_eq("hello".index_of("ll"), 2)
+  assert_eq("hello".index_of("xyz"), -1)

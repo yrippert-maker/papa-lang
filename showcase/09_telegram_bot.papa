@@ -1,0 +1,70 @@
+// ═══════════════════════════════════════
+//  PAPA Telegram Bot — точка входа
+// ═══════════════════════════════════════
+
+import "std/telegram"
+
+say "🤖 PAPA Telegram Bot"
+say ""
+
+// ── Конфигурация ──
+bot = tg_config(secret("123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"))
+say "Bot: {bot.get("bot_name").value} — {bot.get("status").value}"
+
+// ── Отправка сообщения ──
+msg = tg_send("123456789", "Привет из PAPA Ecosystem! 🛡️")
+say "Sent: msg_id={msg.get("message_id").value}"
+
+// ── Отправка файла ──
+file = tg_send_file("123456789", "report.pdf", "Отчёт PAPA RAS за март 2026")
+say "File: {file.get("status").value}"
+
+// ── Webhook ──
+wh = tg_webhook("https://papa.app/api/telegram/webhook")
+say "Webhook: {wh.get("status").value}"
+
+// ── Парсинг команд ──
+cmd1 = tg_parse_command("/score ACME Corp")
+say "Command: {cmd1.get("command").value}, args: {cmd1.get("args").value}"
+
+cmd2 = tg_parse_command("/deploy my-api production")
+say "Command: {cmd2.get("command").value}, args: {cmd2.get("args").value}"
+
+// ── Клавиатура ──
+kb = tg_keyboard(["📊 Score", "🚀 Deploy", "🔐 Secrets", "📞 Call"])
+say "Keyboard: {kb.get("buttons_count").value} buttons"
+
+// ── Тесты ──
+
+test "tg config"
+  bot = tg_config(secret("test-token"))
+  assert_eq(bot.get("status").value, "configured")
+
+test "tg send"
+  msg = tg_send("123", "hello")
+  assert_eq(msg.get("status").value, "sent")
+
+test "tg send file"
+  f = tg_send_file("123", "file.pdf", "caption")
+  assert_eq(f.get("status").value, "sent")
+
+test "tg webhook"
+  wh = tg_webhook("https://example.com/hook")
+  assert_eq(wh.get("status").value, "active")
+
+test "tg parse command"
+  cmd = tg_parse_command("/score ACME Corp")
+  assert_eq(cmd.get("command").value, "score")
+  assert_eq(cmd.get("args").value, "ACME Corp")
+  assert_true(cmd.get("is_command").value)
+
+test "tg parse non-command"
+  cmd = tg_parse_command("just a message")
+  assert_false(cmd.get("is_command").value)
+
+test "tg keyboard"
+  kb = tg_keyboard(["A", "B", "C"])
+  assert_eq(kb.get("buttons_count").value, 3)
+
+say ""
+say "🤖 Telegram Bot — 7 tests"

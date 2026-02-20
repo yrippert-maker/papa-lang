@@ -1,0 +1,8 @@
+// PAPA Lang std/time — время
+// Реализовано встроенно в интерпретаторе (import "std/time")
+//
+// Функции:
+//   now()           — текущее время как текст (встроенная)
+//   sleep(seconds)   — пауза (встроенная)
+//   timestamp()     — Unix timestamp как float
+//   format_time(format) — форматированное время (%Y-%m-%d %H:%M:%S и т.д.)

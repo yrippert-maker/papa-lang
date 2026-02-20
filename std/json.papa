@@ -1,0 +1,7 @@
+// PAPA Lang std/json — работа с JSON
+// Реализовано встроенно в интерпретаторе (import "std/json")
+//
+// Функции:
+//   json_encode(value) — преобразовать map/list/value в JSON текст
+//   json_decode(text)   — разобрать JSON текст в map/list (maybe)
+//   json_pretty(value) — красивый JSON с отступами

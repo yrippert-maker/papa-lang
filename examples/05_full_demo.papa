@@ -1,0 +1,154 @@
+// ═══════════════════════════════════════════
+// PAPA Lang — Полная демонстрация
+// ═══════════════════════════════════════════
+
+say "╔══════════════════════════════════════════╗"
+say "║  🛡️  PAPA Lang v0.3 — Full Demo          ║"
+say "╚══════════════════════════════════════════╝"
+say ""
+
+// ═══ 1. Типы данных ═══
+say "📦 1. Типы данных"
+integer = 42
+floating = 3.14
+text_val = "Привет"
+boolean = true
+say "  int: {integer}, float: {floating}, text: {text_val}, bool: {boolean}"
+say ""
+
+// ═══ 2. Строки — один вид ═══
+say "📝 2. Строки с подстановкой"
+city = "Дубай"
+temp = 35
+say "  Погода в {city}: {temp}°C"
+say "  Вычисление: 2 + 2 = {2 + 2}, 10 * 3 = {10 * 3}"
+say ""
+
+// ═══ 3. Безопасность ═══
+say "🛡️ 3. Безопасность"
+db_user = some("admin")
+config = none()
+fallback_user = db_user ?? "не задан"
+say "  DB user: {fallback_user}"
+fallback_cfg = config ?? "по умолчанию"
+say "  Config: {fallback_cfg}"
+db_pass = secret("inDC5sIYwr8lmVLp")
+say "  DB pass: {db_pass}"
+say ""
+
+// ═══ 4. Коллекции ═══
+say "📋 4. Коллекции"
+services = ["postgres", "redis", "gitea", "backend", "frontend"]
+for svc in services
+  say "  ✅ {svc}"
+say ""
+
+// ═══ 5. Функции ═══
+say "⚡ 5. Функции"
+
+double(n: int) -> int = n * 2
+square(n: int) -> int = n * n
+
+say "  double(21) = {double(21)}"
+say "  square(8) = {square(8)}"
+
+fizzbuzz(n: int) -> text
+  if n % 15 == 0
+    return "FizzBuzz"
+  else if n % 3 == 0
+    return "Fizz"
+  else if n % 5 == 0
+    return "Buzz"
+  return "{n}"
+
+say ""
+say "  FizzBuzz 1-20:"
+for i in 1..20
+  say "    {i}: {fizzbuzz(i)}"
+say ""
+
+// ═══ 6. Fibonacci ═══
+say "🧮 6. Fibonacci"
+
+fib(n: int) -> int
+  if n <= 1
+    return n
+  return fib(n - 1) + fib(n - 2)
+
+for i in 0..12
+  say "  fib({i}) = {fib(i)}"
+say ""
+
+// ═══ 7. Управление потоком ═══
+say "🔀 7. Управление потоком"
+score = 85
+if score >= 90
+  say "  Оценка: Отлично"
+else if score >= 80
+  say "  Оценка: Хорошо"
+else if score >= 70
+  say "  Оценка: Удовлетворительно"
+else
+  say "  Оценка: Неудовлетворительно"
+say ""
+
+// ═══ 8. Мутабельность ═══
+say "🔄 8. Мутабельность"
+mut count = 0
+for i in 1..100
+  count = count + i
+say "  Сумма 1..100 = {count}"
+say ""
+
+// ═══ 9. Model ═══
+say "📦 9. Model (v0.3)"
+model DemoUser
+  name: text
+  score: int
+
+u1 = DemoUser.create(name: "Алиса", score: 100)
+u2 = DemoUser.create(name: "Боб", score: 85)
+say "  Создано: {DemoUser.count()} записей"
+say ""
+
+// ═══ 10. Сервер ═══
+say "🚀 10. Веб-сервер"
+serve on port 8200
+say ""
+
+// ═══ 11. Тесты ═══
+
+test "сложение работает"
+  assert 2 + 2 == 4
+  assert 100 + 200 == 300
+
+test "строки с подстановкой"
+  name = "PAPA"
+  greeting = "Hello {name}"
+  assert greeting == "Hello PAPA"
+
+test "maybe безопасен"
+  val = some(42)
+  empty = none()
+  assert val ?? 0 == 42
+  assert empty ?? 0 == 0
+
+test "secret скрывает значение"
+  pw = secret("test123")
+  visible = "{pw}"
+  assert visible == "***REDACTED***"
+
+test "double работает"
+  assert double(5) == 10
+  assert double(0) == 0
+  assert double(100) == 200
+
+test "fibonacci корректен"
+  assert fib(0) == 0
+  assert fib(1) == 1
+  assert fib(10) == 55
+
+say ""
+say "═══════════════════════════════════════════"
+say "  ✅ PAPA Lang v0.3 — Все демонстрации!"
+say "═══════════════════════════════════════════"

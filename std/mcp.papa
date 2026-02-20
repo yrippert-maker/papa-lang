@@ -1,0 +1,21 @@
+// ═══════════════════════════════════════
+//  std/mcp — Model Context Protocol
+//  Composio.dev, n8n-MCP, Custom servers
+// ═══════════════════════════════════════
+
+// Конфигурация MCP-сервера
+// mcp_connect(server_url: text, api_key: secret) -> map
+
+// Вызов MCP-инструмента
+// mcp_call(tool_name: text, params: map) -> map
+
+// Список доступных инструментов
+// mcp_tools() -> list
+
+// Email через Composio
+// mcp_email_send(to: text, subject: text, body: text) -> map
+// mcp_email_read(count: int) -> list
+
+// Calendar через Composio
+// mcp_calendar_create(title: text, date: text, time: text) -> map
+// mcp_calendar_list(days: int) -> list

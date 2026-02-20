@@ -1,0 +1,64 @@
+// ═══════════════════════════════════════════
+// PAPA Lang — Безопасность встроена в язык
+// ═══════════════════════════════════════════
+
+say "🛡️ Демонстрация безопасности PAPA Lang"
+say ""
+
+// ── Maybe тип: нет null, нет undefined, нет NaN ──
+say "── Maybe тип ──"
+
+user = some("admin")
+say "user = {user}"
+say "user существует? {user}"
+
+empty = none()
+say "empty = {empty}"
+
+// Безопасный доступ через ??
+name = user ?? "аноним"
+say "Имя: {name}"
+
+fallback = empty ?? "значение по умолчанию"
+say "Fallback: {fallback}"
+
+// ── Secret тип: пароли никогда не утекут ──
+say ""
+say "── Secret тип ──"
+
+password = secret("SuperSecret123!")
+say "Пароль: {password}"
+// Выведет: Пароль: ***REDACTED***
+
+api_key = secret("sk-ant-api03-xxxxx")
+say "API ключ: {api_key}"
+// Выведет: API ключ: ***REDACTED***
+
+log "Подключение с паролем {password}"
+// В логах: ***REDACTED***
+
+// ── Иммутабельность по умолчанию ──
+say ""
+say "── Иммутабельность ──"
+
+server = "papa-ai.ae"
+say "Сервер: {server}"
+// server = "hacked.com"  // ← Ошибка! server иммутабельный
+
+// Мутабельное — только явно
+mut requests = 0
+requests = requests + 1
+requests = requests + 1
+requests = requests + 1
+say "Запросов: {requests}"
+
+// ── Списки безопасны ──
+say ""
+say "── Безопасные списки ──"
+
+langs = ["Python", "Rust", "Go", "PAPA"]
+say "Первый: {langs}"
+say "Количество: {langs}"
+
+// Нет IndexOutOfBounds!
+// langs[99] вернёт maybe, не crash

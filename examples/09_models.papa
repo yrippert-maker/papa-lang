@@ -1,0 +1,44 @@
+// ═══════════════════════════════════════════
+// PAPA Lang v0.3 — Model/Store
+// ═══════════════════════════════════════════
+
+say "📦 Демонстрация Model"
+say ""
+
+model User
+  name: text
+  email: text unique
+  age: int
+
+user1 = User.create(name: "Иван", email: "ivan@test.com", age: 25)
+user2 = User.create(name: "Мария", email: "maria@test.com", age: 30)
+user3 = User.create(name: "Пётр", email: "petr@test.com", age: 17)
+
+say "Создано: {user1}, {user2}, {user3}"
+
+all_users = User.all()
+say "Всего пользователей: {User.count()}"
+
+found = User.find(email: "maria@test.com")
+say "Найден: {found}"
+
+adults = User.where(age >= 18)
+say "Взрослых: {adults.count}"
+
+say ""
+say "✅ Model работает"
+
+test "model create и all"
+  model TestItem
+    id: int
+    name: text
+
+  item = TestItem.create(id: 1, name: "test")
+  assert TestItem.count() == 1
+  all_items = TestItem.all()
+  assert all_items.count == 1
+
+test "model find"
+  found_user = User.find(email: "ivan@test.com")
+  assert found_user.exists
+  assert found_user.value.name == "Иван"

@@ -1,0 +1,8 @@
+// PAPA Lang std/http — HTTP клиент
+// Реализовано встроенно в интерпретаторе (import "std/http")
+//
+// Функции (возвращают maybe {status, body, headers}):
+//   http_get(url)
+//   http_post(url, body)
+//   http_put(url, body)
+//   http_delete(url)

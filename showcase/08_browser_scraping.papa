@@ -1,0 +1,61 @@
+// ═══════════════════════════════════════
+//  PAPA Browser Agent — Web scraping
+//  Парсинг ЕГРЮЛ, ЦБ, Bloomberg для RAS
+// ═══════════════════════════════════════
+
+import "std/browser"
+
+say "🌐 PAPA Browser Agent"
+say ""
+
+// ── Парсинг данных для скоринга ──
+page = browser_open("https://egrul.nalog.ru/")
+say "Page: {page.get("status").value}"
+
+data = browser_extract("https://egrul.nalog.ru/", ".company-info")
+say "Extracted: {data.count} items"
+
+screenshot = browser_screenshot("egrul_result.png")
+say "Screenshot: {screenshot.get("file").value} ({screenshot.get("width").value}x{screenshot.get("height").value})"
+
+// ── Заполнение формы ──
+filled = browser_fill("#inn-input", "7707083893")
+say "Form filled: {filled}"
+
+clicked = browser_click("#search-button")
+say "Button clicked: {clicked}"
+
+text = browser_text(".result-table")
+say "Result: {text}"
+
+closed = browser_close()
+say "Browser closed: {closed}"
+
+// ── Тесты ──
+
+test "browser open"
+  page = browser_open("https://example.com")
+  assert_eq(page.get("status").value, "loaded")
+
+test "browser extract"
+  items = browser_extract("https://example.com", ".item")
+  assert_eq(items.count, 3)
+
+test "browser screenshot"
+  ss = browser_screenshot("test.png")
+  assert_eq(ss.get("status").value, "captured")
+
+test "browser fill and click"
+  assert_true(browser_fill("#input", "value"))
+  assert_true(browser_click("#button"))
+
+test "browser text"
+  page = browser_open("https://example.com")
+  text = browser_text("body")
+  assert_true(len(text) > 0)
+
+test "browser close"
+  assert_true(browser_close())
+
+say ""
+say "🌐 Browser Agent — 6 tests"

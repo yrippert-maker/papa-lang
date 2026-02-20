@@ -1,0 +1,72 @@
+// ═══════════════════════════════════════════
+// PAPA Lang — Функции и управление потоком
+// ═══════════════════════════════════════════
+
+say "⚡ Функции и управление потоком"
+say ""
+
+// ── Короткие функции ──
+double(n: int) -> int = n * 2
+square(n: int) -> int = n * n
+greet(name: text) -> text = "Привет, {name}!"
+
+say double(21)
+say square(8)
+say greet("Мир")
+
+// ── Функция с телом ──
+say ""
+say "── Факториал ──"
+
+factorial(n: int) -> int
+  if n <= 1
+    return 1
+  return n * factorial(n - 1)
+
+for i in 1..10
+  say "  {i}! = {factorial(i)}"
+
+// ── Функция с параметрами по умолчанию ──
+say ""
+say "── Параметры по умолчанию ──"
+
+power(base: int, exp: int) -> int
+  mut result = 1
+  for i in 1..exp
+    result = result * base
+  return result
+
+say "2^10 = {power(2, 10)}"
+say "3^5 = {power(3, 5)}"
+
+// ── Циклы ──
+say ""
+say "── Циклы ──"
+
+// for с диапазоном
+say "Чётные числа до 20:"
+for n in 1..20
+  if n % 2 == 0
+    say "  {n}"
+
+// for по списку
+say ""
+say "Языки программирования:"
+languages = ["Python", "Rust", "Go", "Kotlin", "PAPA"]
+for lang in languages
+  if lang == "PAPA"
+    say "  🌟 {lang} — это мы!"
+  else
+    say "  • {lang}"
+
+// ── Рекурсивный Fibonacci ──
+say ""
+say "── Fibonacci ──"
+
+fib(n: int) -> int
+  if n <= 1
+    return n
+  return fib(n - 1) + fib(n - 2)
+
+for i in 0..15
+  say "  fib({i}) = {fib(i)}"

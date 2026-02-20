@@ -1,0 +1,63 @@
+// ═══════════════════════════════════════
+//  PAPA Voice Agent — std/voice showcase
+// ═══════════════════════════════════════
+
+import "std/voice"
+
+say "📞 PAPA Voice Agent"
+say ""
+
+// ── Конфигурация ──
+api_key = secret("sk-telnyx-xxxxxxxxxxxx")
+config = voice_config("telnyx", api_key)
+say "Provider: {config.get("provider").value} — {config.get("status").value}"
+
+// ── Звонок ──
+call = voice_call("+971501234567", "Здравствуйте, хочу забронировать столик на двоих на 19:00")
+say "Call ID: {call.get("call_id").value}"
+say "Status: {call.get("status").value}"
+say "Duration: {call.get("duration").value}s"
+
+// ── SMS ──
+sms = voice_sms("+971501234567", "Ваш столик забронирован на 19:00. PAPA Ecosystem")
+say "SMS: {sms.get("status").value}"
+
+// ── Транскрипция ──
+transcript = voice_transcribe("https://storage.papa.app/calls/recording.mp3")
+say "Transcript: {transcript}"
+
+// ── TTS ──
+audio = voice_tts("Добро пожаловать в PAPA Ecosystem", "nova")
+say "TTS: {audio.get("voice").value}, {audio.get("duration").value}s"
+
+// ── Тесты ──
+
+test "voice config"
+  cfg = voice_config("telnyx", secret("key"))
+  assert_eq(cfg.get("provider").value, "telnyx")
+  assert_true(cfg.get("configured").value)
+
+test "voice call"
+  result = voice_call("+1234567890", "test message")
+  assert_eq(result.get("status").value, "completed")
+  assert_true(result.get("duration").value > 0)
+
+test "voice sms"
+  result = voice_sms("+1234567890", "test")
+  assert_eq(result.get("status").value, "delivered")
+
+test "voice transcribe"
+  result = voice_transcribe("https://example.com/audio.mp3")
+  assert_true(len(result) > 0)
+
+test "voice tts"
+  result = voice_tts("Hello World", "alloy")
+  assert_eq(result.get("voice").value, "alloy")
+  assert_true(result.get("duration").value > 0)
+
+test "voice status"
+  result = voice_status("abc123")
+  assert_eq(result.get("status").value, "completed")
+
+say ""
+say "📞 Voice Agent — 6 tests"

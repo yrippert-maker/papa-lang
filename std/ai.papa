@@ -1,0 +1,18 @@
+// ═══════════════════════════════════════
+//  std/ai — AI Cost Guardrails
+// ═══════════════════════════════════════
+
+// ai_budget_set(daily_limit: float, alert_at: float) -> map
+// Установить дневной лимит расходов на AI
+
+// ai_budget_check() -> map
+// Проверить текущий расход: spent, remaining, status
+
+// ai_budget_log(cost: float, provider: text, task: text) -> map
+// Залогировать расход. Если превышен лимит → blocked=true
+
+// ai_budget_reset() -> map
+// Сбросить счётчик (новый день)
+
+// ai_budget_report() -> map
+// Отчёт: total_spent, savings, efficiency%

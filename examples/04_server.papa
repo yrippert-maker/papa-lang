@@ -1,0 +1,26 @@
+// ═══════════════════════════════════════════
+// PAPA Lang — Веб-сервер (симуляция)
+// ═══════════════════════════════════════════
+
+say "🚀 PAPA DevOps — Веб-сервер"
+say ""
+
+// Конфигурация сервера — одна строка
+serve on port 8200
+
+// Маршруты
+route GET "/"
+  do
+    return "Привет из PAPA Lang!"
+
+route GET "/health"
+  do
+    return "ok"
+
+route GET "/api/stats"
+  auth required
+  do
+    return "stats data"
+
+say ""
+say "Все маршруты зарегистрированы ✅"

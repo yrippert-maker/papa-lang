@@ -1,0 +1,3 @@
+// Демо-пакет для PAPA Lang v0.4
+greet(name: text) -> text = "Hello from package, {name}!"
+add(a: int, b: int) -> int = a + b

@@ -1,0 +1,12 @@
+// ═══════════════════════════════════════
+//  std/browser — Browser Automation Agent
+//  Headless browser для парсинга и scraping
+// ═══════════════════════════════════════
+
+// browser_open(url: text) -> map
+// browser_text(selector: text) -> text
+// browser_click(selector: text) -> bool
+// browser_screenshot(filename: text) -> map
+// browser_fill(selector: text, value: text) -> bool
+// browser_extract(url: text, selector: text) -> list
+// browser_close() -> bool

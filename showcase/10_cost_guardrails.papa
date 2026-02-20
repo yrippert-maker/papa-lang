@@ -1,0 +1,71 @@
+// ═══════════════════════════════════════
+//  PAPA Cost Guardrails — ai_budget
+// ═══════════════════════════════════════
+
+import "std/ai"
+
+say "💰 PAPA Cost Guardrails"
+say ""
+
+// ── Установить лимит $15/день ──
+budget = ai_budget_set(15.0, 0.8)
+say "Budget: ${budget.get("daily_limit").value}/day, alert at {budget.get("alert_at_pct").value}%"
+
+// ── Логирование расходов ──
+ai_budget_log(0.50, "anthropic", "security_audit")
+ai_budget_log(0.08, "glm5", "code_review")
+ai_budget_log(0.03, "glm5", "test_generation")
+ai_budget_log(1.20, "anthropic", "creative_writing")
+
+// ── Проверка статуса ──
+status = ai_budget_check()
+say "Spent: ${status.get("spent").value} / ${status.get("limit").value}"
+say "Remaining: ${status.get("remaining").value}"
+say "Status: {status.get("status").value}"
+
+// ── Отчёт ──
+report = ai_budget_report()
+say "Efficiency: {report.get("efficiency").value}%"
+say "Savings: ${report.get("savings").value}"
+
+// ── Тесты ──
+
+test "budget set"
+  b = ai_budget_set(10.0, 0.7)
+  assert_eq(b.get("daily_limit").value, 10.0)
+
+test "budget log and check"
+  ai_budget_set(5.0, 0.8)
+  ai_budget_log(1.0, "anthropic", "test")
+  ai_budget_log(0.5, "glm5", "test")
+  s = ai_budget_check()
+  assert_eq(s.get("spent").value, 1.5)
+  assert_eq(s.get("status").value, "ok")
+
+test "budget warning"
+  ai_budget_set(2.0, 0.5)
+  ai_budget_log(1.5, "anthropic", "big_task")
+  s = ai_budget_check()
+  assert_eq(s.get("status").value, "warning")
+
+test "budget exceeded"
+  ai_budget_set(1.0, 0.8)
+  result = ai_budget_log(1.5, "anthropic", "expensive")
+  assert_true(result.get("blocked").value)
+
+test "budget reset"
+  ai_budget_set(10.0, 0.8)
+  ai_budget_log(5.0, "anthropic", "task")
+  ai_budget_reset()
+  s = ai_budget_check()
+  assert_eq(s.get("spent").value, 0.0)
+
+test "budget report"
+  ai_budget_set(20.0, 0.8)
+  ai_budget_log(8.0, "anthropic", "task")
+  r = ai_budget_report()
+  assert_eq(r.get("total_spent").value, 8.0)
+  assert_eq(r.get("savings").value, 12.0)
+
+say ""
+say "💰 Cost Guardrails — 6 tests"

@@ -1,0 +1,18 @@
+// PAPA Lang std/string — строковые функции
+// Реализовано встроенно в интерпретаторе (import "std/string")
+//
+// Функции:
+//   trim(s)           — убрать пробелы по краям
+//   upper(s)          — верхний регистр
+//   lower(s)          — нижний регистр
+//   starts_with(s, prefix) — начинается с
+//   ends_with(s, suffix)   — заканчивается на
+//   contains(s, sub)  — содержит подстроку
+//   replace(s, old, new) — замена
+//   split(s, sep)     — разбить по разделителю → list
+//   join(list, sep)   — собрать из списка
+//   repeat_str(s, n)  — повторить N раз (repeat — ключевое слово)
+//   reverse(s)        — перевернуть
+//   char_at(s, i)     — символ по индексу → maybe
+//   pad_left(s, width, char)  — дополнить слева
+//   pad_right(s, width, char) — дополнить справа
