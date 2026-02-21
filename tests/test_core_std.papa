@@ -1,0 +1,138 @@
+// ============================================
+// PAPA Lang — Core std module tests
+// Tests: math, string, json, http, fs, time
+// ============================================
+
+// ── std/math ──
+import "std/math"
+
+test "math: sqrt"
+  assert sqrt(16) == 4
+  assert sqrt(0) == 0
+  assert sqrt(1) == 1
+
+test "math: pow"
+  assert pow(2, 10) == 1024
+  assert pow(3, 3) == 27
+  assert pow(5, 0) == 1
+
+test "math: floor and ceil"
+  assert floor(3.7) == 3
+  assert floor(-1.2) == -2
+  assert ceil(3.2) == 4
+  assert ceil(-1.8) == -1
+
+test "math: abs"
+  assert abs(-5) == 5
+  assert abs(5) == 5
+  assert abs(0) == 0
+
+test "math: min and max"
+  assert min(3, 7) == 3
+  assert max(3, 7) == 7
+
+// ── std/string ──
+import "std/string"
+
+test "string: upper and lower"
+  assert upper("hello") == "HELLO"
+  assert lower("WORLD") == "world"
+
+test "string: trim"
+  assert trim("  hello  ") == "hello"
+
+test "string: split and join"
+  parts = split("a,b,c", ",")
+  assert join(parts, "-") == "a-b-c"
+
+test "string: replace"
+  assert replace("hello world", "world", "papa") == "hello papa"
+
+test "string: contains"
+  assert contains("hello world", "world") == true
+  assert contains("hello", "xyz") == false
+
+test "string: starts_with and ends_with"
+  assert starts_with("hello", "hel") == true
+  assert ends_with("hello", "llo") == true
+
+// ── std/json ──
+import "std/json"
+
+test "json: encode and decode"
+  data = {"name": "PAPA", "version": 8}
+  encoded = json_encode(data)
+  decoded = json_decode(encoded)
+  assert decoded.name == "PAPA"
+  assert decoded.version == 8
+
+test "json: encode array"
+  arr = [1, 2, 3]
+  encoded = json_encode(arr)
+  decoded = json_decode(encoded)
+  assert len(decoded) == 3
+
+// ── std/time ──
+import "std/time"
+
+test "time: timestamp"
+  ts = timestamp()
+  assert ts > 0
+
+test "time: format_time"
+  formatted = format_time(0, "UTC")
+  assert len(formatted) > 0
+
+// ── std/fs ──
+import "std/fs"
+
+test "fs: file_exists"
+  assert file_exists("papa.py") == true
+  assert file_exists("nonexistent_file_abc123.txt") == false
+
+test "fs: read_file"
+  content = read_file("papa.toml")
+  assert len(content) > 0
+
+// ── Core language features ──
+
+test "secret type redaction"
+  pw = secret("MyPassword123")
+  assert "{pw}" == "***REDACTED***"
+
+test "maybe type with some"
+  val = some("hello")
+  result = val ?? "default"
+  assert result == "hello"
+
+test "maybe type with none"
+  val = none
+  result = val ?? "default"
+  assert result == "default"
+
+test "immutability by default"
+  x = 42
+  // x = 99  // would fail — immutable by default
+  assert x == 42
+
+test "mutable variables"
+  mut counter = 0
+  counter = counter + 1
+  counter = counter + 1
+  assert counter == 2
+
+test "string interpolation"
+  name = "PAPA"
+  ver = 8
+  assert "Hello {name} v{ver}" == "Hello PAPA v8"
+
+test "list operations"
+  items = [1, 2, 3, 4, 5]
+  assert len(items) == 5
+  assert items[0] == 1
+  assert items[4] == 5
+
+test "map operations"
+  config = {"host": "localhost", "port": 8200}
+  assert config.host == "localhost"
+  assert config.port == 8200
