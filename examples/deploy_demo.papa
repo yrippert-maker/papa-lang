@@ -1,0 +1,23 @@
+// PAPA Lang — Infrastructure as Code Demo
+// Описываем и деплоим сервисы одной командой
+
+use infra
+
+// Описываем сервисы
+let site = service("papa-lang-site", {
+  "port": 3001,
+  "domain": "lang.papa-ai.ae",
+  "provider": "digitalocean"
+})
+
+let api = service("papa-api", {
+  "port": 3002,
+  "domain": "api.papa-ai.ae",
+  "env": {
+    "PAPA_AI_PROVIDER": "claude",
+    "NODE_ENV": "production"
+  },
+  "provider": "digitalocean"
+})
+
+// deploy_all([site, api]) — деплой одной командой

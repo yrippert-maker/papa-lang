@@ -1,0 +1,23 @@
+// ═══════════════════════════════════════
+//  std/cwb — CWB Mobile Assistant
+//  AI-помощник для мобильных задач
+// ═══════════════════════════════════════
+
+// cwb_process(text: text) -> map
+// intent, words_count, suggestions
+
+// cwb_idea(idea: text) -> map
+// Сохранить идею
+
+// cwb_ideas_list() -> list
+// Список идей
+
+// cwb_command(cmd: text) -> map
+// Парсинг команды
+
+// cwb_task_add(title, due?) -> map
+// cwb_task_list() -> list
+// cwb_task_done(task_id) -> map
+
+// cwb_context(key, value?) -> map
+// Контекст: set или get

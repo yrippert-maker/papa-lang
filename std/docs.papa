@@ -1,0 +1,19 @@
+// ═══════════════════════════════════════
+//  std/docs — AI Document Generation
+//  Генерация бренда, логотипов, документов
+// ═══════════════════════════════════════
+
+// docs_brand(name: text) -> map
+// name, tagline, colors, fonts
+
+// docs_logo(name: text) -> map
+// text, svg_snippet, suggestions
+
+// docs_generate(template: text, data?: map) -> map
+// template: letter | report | contract
+
+// docs_templates() -> list
+// Список доступных шаблонов
+
+// docs_preview_letterhead(brand: map) -> map
+// html, css для фирменного бланка

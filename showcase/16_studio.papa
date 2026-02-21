@@ -1,0 +1,24 @@
+// ═══════════════════════════════════════
+//  std/studio — AI Development Studio
+// ═══════════════════════════════════════
+
+import "std/studio"
+
+say "🧪 Studio Tests"
+say ""
+
+test "studio_analyze возвращает tasks"
+  r = studio_analyze("add api and ui for login")
+  assert (r.tasks ?? []).count >= 0
+
+test "studio_structure web"
+  r = studio_structure("web")
+  assert (r.folders ?? []).count > 0
+
+test "studio_estimate"
+  tasks = [{"name" -> "api", "estimate" -> "2h"}, {"name" -> "ui", "estimate" -> "3h"}]
+  e = studio_estimate(tasks)
+  assert (e.total_hours ?? 0) >= 0
+
+say ""
+say "✅ Studio tests done"

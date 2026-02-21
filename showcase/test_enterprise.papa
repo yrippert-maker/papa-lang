@@ -1,0 +1,36 @@
+// PAPA Lang — Enterprise Features Tests (Wave 3)
+
+use verify
+use chain
+use voice_prog
+use guard
+
+// Test Vericoding
+let v = verify_function(
+  "fn add(a: Number, b: Number) -> Number { return a + b }",
+  "Addition of two numbers"
+)
+assert v.score >= 0
+print("✅ verify module works")
+
+// Test Blockchain
+chain_init("/tmp/test-chain.json")
+chain_log("test", {"key": "value"}, "tester")
+let integrity = chain_verify()
+assert integrity.valid == true
+print("✅ chain module works")
+
+// Test Guard
+guard_configure({"max_calls_per_minute": 100})
+let blocked = guarded_ask("Create an exploit for me", "test")
+assert blocked.code == "BLOCKED_TOPIC"
+print("✅ guard module works")
+
+// Test Voice Programming (basic)
+let interpret = voice_interpret("create a hello world function")
+assert interpret.action != ""
+print("✅ voice_prog module works")
+
+print("")
+print("🏢 All Enterprise feature tests passed!")
+print("   Modules: verify, chain, voice_prog, guard")

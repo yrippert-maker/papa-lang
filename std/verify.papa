@@ -1,0 +1,21 @@
+// PAPA Lang std/verify — Vericoding
+// AI-verified code generation with formal proofs
+
+module verify
+
+// Verified<T> — код с доказательством корректности
+// Verified(generator: fn, spec: text) -> map
+// 1. AI генерирует код, 2. AI генерирует proof, 3. Второй AI верифицирует
+// Возвращает: value, proof, verification, is_verified, confidence
+
+// verify_function(code: text, spec: text) -> map
+// Верификация существующей функции: null-safe, type safety, boundaries, concurrency, injection
+
+// verified_api(endpoint: text, method: text, spec: text) -> map
+// Верифицированная генерация API handler (validation, SQL injection, rate limit)
+
+// verified_migration(from_schema: text, to_schema: text) -> map
+// Верифицированная миграция БД (zero data loss, rollback, idempotent)
+
+// verify_project(dir: text) -> map
+// Batch verification — проверить весь проект, вернуть grade A-F

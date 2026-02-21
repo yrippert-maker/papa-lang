@@ -1,0 +1,32 @@
+// PAPA Lang — Blockchain Audit Trail Demo
+
+use chain
+
+// Инициализация
+chain_init("/tmp/papa-audit-chain.json")
+
+// Логируем действия
+chain_deploy("papa-app", "v0.9.0", "developer@papa-ai.ae")
+chain_code_review("papa/papa-app", "abc123", "approved", "reviewer@papa-ai.ae")
+chain_security_scan("papa-app:latest", 0, "security-bot")
+chain_access("database/users", "read", "analyst@papa-ai.ae")
+chain_config_change("API_KEY", "old-key", "new-key", "admin@papa-ai.ae")
+chain_data_access("users", "SELECT", 150, "analyst@papa-ai.ae")
+
+// Верификация целостности
+let integrity = chain_verify()
+print("Chain integrity: " + integrity.integrity)
+print("Total blocks: " + str(integrity.blocks))
+
+assert integrity.valid == true
+assert integrity.blocks >= 7  // genesis + 6 actions
+
+// Поиск
+let deploys = chain_search("deploy", "", "")
+print("Deploys: " + str(len(deploys)))
+
+// Compliance отчёт
+let report = chain_export("compliance")
+print(report)
+
+print("✅ Blockchain Audit Trail tests passed")

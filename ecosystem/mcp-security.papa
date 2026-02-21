@@ -1,0 +1,9 @@
+// PAPA MCP — Security Scanner
+// Подключается к Cursor/Claude Code как MCP tool
+
+use mcp
+use security
+
+// papa_security_scan — сканирование кода на уязвимости
+// papa_compliance_check — проверка GDPR/152-FZ/HIPAA
+// papa_audit_log — создание audit записи

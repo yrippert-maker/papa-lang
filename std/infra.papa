@@ -1,0 +1,19 @@
+// PAPA Lang std/infra — Infrastructure as Code
+// Описываешь сервисы → деплоишь одной командой
+
+module infra
+
+// service(name: text, config: map) -> map
+// Описание сервиса: port, domain, ssl, env, provider
+
+// deploy(svc: map) -> map
+// Деплой одного сервиса (digitalocean / yandex)
+
+// deploy_all(services: list) -> list
+// Деплой списка сервисов
+
+// rollback(name: text) -> map
+// Откатить деплой
+
+// status() -> list
+// Статус всех контейнеров

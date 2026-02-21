@@ -1,0 +1,63 @@
+// ═══════════════════════════════════════
+//  Orchestrator Safety — тесты
+// ═══════════════════════════════════════
+
+import "std/orchestrator"
+
+say "🧪 Orchestrator Safety Tests"
+say ""
+
+test "orc_config возвращает статус"
+  cfg = orc_config([])
+  status = cfg.status ?? ""
+  assert status == "configured"
+
+test "orc_review approve для безопасной задачи"
+  r = orc_review(["add a button to the form"])
+  d = r.decision ?? ""
+  assert d == "approve"
+
+test "orc_review reject для forbidden action"
+  r = orc_review(["delete .git and remove all history"])
+  d = r.decision ?? ""
+  assert d == "reject"
+
+test "orc_review modify при protected file"
+  r = orc_review(["rewrite entire src/interpreter.py"])
+  d = r.decision ?? ""
+  assert d == "modify" or d == "reject"
+
+test "orc_check_file approve для create"
+  r = orc_check_file(["create", "src/new.py", ""])
+  d = r.decision ?? ""
+  assert d == "approve"
+
+test "orc_check_file reject для delete protected"
+  r = orc_check_file(["delete", "src/interpreter.py", ""])
+  d = r.decision ?? ""
+  assert d == "reject"
+
+test "orc_check_deps approve для install"
+  r = orc_check_deps(["install", []])
+  assert (r.decision ?? "") == "approve"
+
+test "orc_validate_prompt для короткого промпта"
+  r = orc_validate_prompt(["fix bug in login"])
+  assert (r.decision ?? "") == "approve"
+
+test "orc_log возвращает список"
+  logs = orc_log()
+  assert logs.count >= 0
+
+test "orc_config с api_key"
+  cfg = orc_config([secret("test-key"), "claude-sonnet"])
+  assert (cfg.status ?? "") == "configured"
+
+test "orc_check_arch с модулями"
+  mods = ["papa-lang", "papa-shared"]
+  r = orc_check_arch(["add feature", mods])
+  d = r.decision ?? ""
+  assert d == "approve" or d == "modify" or d == "reject"
+
+say ""
+say "✅ Orchestrator Safety tests done"

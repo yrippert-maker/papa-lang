@@ -1,0 +1,104 @@
+{
+  "version": "1.0.0",
+  "name": "PAPA MCP Marketplace",
+  "description": "Official marketplace for PAPA Lang MCP tools and modules",
+  "updated": "2026-02-21",
+  "packages": [
+    {
+      "name": "papa-security",
+      "version": "1.0.0",
+      "description": "Security Scanner — AI-powered vulnerability detection",
+      "command": "python3 papa.py mcp serve security",
+      "category": "security",
+      "tier": "free",
+      "tools": ["security_scan", "vulnerability_report", "fix_suggestions"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-deploy",
+      "version": "1.0.0",
+      "description": "Deployment Manager — deploy services from .papa files",
+      "command": "python3 papa.py mcp serve deploy",
+      "category": "devops",
+      "tier": "pro",
+      "tools": ["deploy_service", "deploy_status", "rollback", "infra_generate_compose"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-evolve",
+      "version": "1.0.0",
+      "description": "Self-Evolving Code — AI analyzes and improves your codebase",
+      "command": "python3 papa.py mcp serve evolve",
+      "category": "ai",
+      "tier": "pro",
+      "tools": ["evolve_analyze", "evolve_suggest", "evolve_apply", "evolve_pr"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-guard",
+      "version": "1.0.0",
+      "description": "AI Guardrails — PII detection, prompt injection prevention, cost control",
+      "command": "python3 papa.py mcp serve guard",
+      "category": "security",
+      "tier": "enterprise",
+      "tools": ["guarded_ask", "guard_check_pii", "guard_check_injection", "guard_compliance_report"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-chain",
+      "version": "1.0.0",
+      "description": "Blockchain Audit Trail — immutable compliance logging (GDPR, 152-FZ, HIPAA)",
+      "command": "python3 papa.py mcp serve chain",
+      "category": "compliance",
+      "tier": "enterprise",
+      "tools": ["chain_record", "chain_verify", "chain_compliance", "chain_export"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-verify",
+      "version": "1.0.0",
+      "description": "Vericoding — AI-verified code generation with formal proofs",
+      "command": "python3 papa.py mcp serve verify",
+      "category": "quality",
+      "tier": "enterprise",
+      "tools": ["verified_generate", "verify_function", "verify_project", "verified_api"],
+      "author": "PAPA Team",
+      "downloads": 0
+    },
+    {
+      "name": "papa-swarm",
+      "version": "1.0.0",
+      "description": "Agent Swarm — multi-agent AI orchestration with debate and consensus",
+      "command": "python3 papa.py mcp serve swarm",
+      "category": "ai",
+      "tier": "pro",
+      "tools": ["swarm_create", "swarm_run", "swarm_orchestrated", "swarm_debate", "swarm_pipeline"],
+      "author": "PAPA Team",
+      "downloads": 0
+    }
+  ],
+  "tiers": {
+    "free": {
+      "price": 0,
+      "description": "Basic tools, community support"
+    },
+    "pro": {
+      "price_usd_month": 29,
+      "description": "Full AI tools, priority support"
+    },
+    "enterprise": {
+      "price_usd_month": 99,
+      "description": "Compliance, security, SLA, audit"
+    },
+    "regulated": {
+      "price_usd_month": 299,
+      "description": "HIPAA, SOX templates, on-premise, dedicated audit"
+    }
+  },
+  "categories": ["security", "devops", "ai", "compliance", "quality"]
+}

@@ -20,3 +20,12 @@
 // design_layout(page_type: text) -> map
 // page_type: "landing" | "dashboard" | "admin" | "form"
 // Возвращает структуру layout
+
+// design_propose(requirements: map) -> map
+// layout, palette, components, industry_hint
+
+// design_from_industry(industry: text) -> map
+// palette, components, fonts, layout_hint
+
+// design_refine(description: text, variant: map) -> map
+// refined, changes, score

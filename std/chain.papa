@@ -1,0 +1,26 @@
+// PAPA Lang std/chain — Blockchain Audit Trail
+// Immutable audit log with hash chain for GDPR, 152-ФЗ, HIPAA, SOX
+
+module chain
+
+// chain_init(file: text)
+// Инициализация цепочки, genesis block
+
+// chain_log(action: text, data: map, actor: text) -> map
+// Добавить запись в цепочку (prev_hash → hash)
+
+// chain_deploy(service, version, actor) -> map
+// chain_code_review(repo, commit, result, actor) -> map
+// chain_security_scan(target, vulnerabilities, actor) -> map
+// chain_access(resource, permission, actor) -> map
+// chain_config_change(key, old_value, new_value, actor) -> map
+// chain_data_access(table, operation, record_count, actor) -> map
+
+// chain_verify() -> map
+// Верификация целостности: valid, blocks, errors, integrity (INTACT/TAMPERED)
+
+// chain_search(action, from_date, to_date) -> list
+// Поиск по цепочке
+
+// chain_export(format: text) -> text
+// Экспорт: json | csv | compliance

@@ -1,0 +1,18 @@
+// PAPA Lang std/ai_router — Triple AI Router
+// Claude (primary) → GPT (fallback) → Gemini (fallback2)
+
+module ai_router
+
+// ai_ask_smart(prompt: text) -> text
+// Умный роутинг: пробует Claude, затем GPT, затем Gemini
+
+// ai_think(prompt: text) -> text
+// Сложные задачи — Gemini thinking (бесплатный deep reasoning)
+
+// ai_code(task: text) -> text
+// Задачи с кодом — Gemini Code Execution
+
+// ai_search(query: text) -> text
+// Поиск — Gemini + Google Search
+
+// PAPA_AI_PROVIDER env: claude|gpt|gemini — приоритет провайдера

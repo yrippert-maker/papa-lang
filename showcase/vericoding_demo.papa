@@ -1,0 +1,32 @@
+// PAPA Lang — Vericoding Demo
+// AI-verified code generation
+
+use verify
+
+// 1. Верифицированный API handler
+let api = verified_api(
+  "/api/users",
+  "POST",
+  "Create user with email validation, password hashing, duplicate check, and audit logging"
+)
+
+print("API Handler verified: " + str(api.is_verified))
+print("Confidence: " + str(api.confidence))
+
+// 2. Верификация существующей функции
+let result = verify_function(
+  "fn divide(a: Number, b: Number) -> Number { return a / b }",
+  "Safe division that handles zero divisor"
+)
+print("Division safety score: " + str(result.score) + "/100")
+
+// 3. Верифицированная миграция
+let migration = verified_migration(
+  "users(id, name, email)",
+  "users(id, name, email, role, created_at)"
+)
+print("Migration verified: " + str(migration.is_verified))
+
+assert api.confidence > 0
+assert result.score >= 0
+print("✅ Vericoding tests passed")

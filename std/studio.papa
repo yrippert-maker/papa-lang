@@ -1,0 +1,13 @@
+// ═══════════════════════════════════════
+//  std/studio — AI Development Studio
+//  Анализ задач, структура проекта, оценки
+// ═══════════════════════════════════════
+
+// studio_analyze(description: text) -> map
+// tasks, complexity, description_excerpt
+
+// studio_structure(project_type: text) -> map
+// project_type: web | api | cli
+
+// studio_estimate(tasks: list) -> map
+// total_hours, tasks_count, buffer

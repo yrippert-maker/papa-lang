@@ -1,0 +1,34 @@
+// ═══════════════════════════════════════
+//  std/orchestrator — AI Safety Layer
+//  Безопасность AI-задач при разработке
+// ═══════════════════════════════════════
+
+// orc_config(api_key?, model?) -> map
+// Настройка orchestrator
+
+// orc_review(task: text) -> map
+// decision: approve | modify | reject, risk_level, reasoning
+
+// orc_check_file(action, filepath?, changes?) -> map
+// Проверка действия над файлом
+
+// orc_check_arch(description, affected_modules?) -> map
+// Проверка архитектурных границ
+
+// orc_check_deps(action, packages?) -> map
+// install | update | remove
+
+// orc_validate_prompt(prompt: text) -> map
+// Валидация промпта перед отправкой в AI
+
+// orc_log() -> list
+// История решений
+
+// orc_verify(task, plan) -> map
+// Проверка плана на соответствие задаче
+
+// orc_autofix(task, plan, errors) -> map
+// Предложения исправлений
+
+// orc_cycle(task, max_steps?) -> map
+// Цикл review → verify → autofix

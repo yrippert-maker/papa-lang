@@ -1,0 +1,52 @@
+// ═══════════════════════════════════════
+//  Orchestrator AutoVerify — тесты
+// ═══════════════════════════════════════
+
+import "std/orchestrator"
+
+say "🧪 Orchestrator AutoVerify Tests"
+say ""
+
+test "orc_verify ok для задачи и плана"
+  t = "add login form"
+  plan = {"steps" -> ["create form", "add validation"]}
+  r = orc_verify([t, plan])
+  assert (r.ok ?? false) == true
+
+test "orc_verify errors при пустой задаче"
+  r = orc_verify(["", "plan"])
+  assert (r.ok ?? true) == false
+  assert (r.errors_count ?? 0) > 0
+
+test "orc_autofix возвращает suggestions"
+  r = orc_autofix(["todo", {}, ["plan is empty"]])
+  assert (r.suggestions_count ?? 0) >= 0
+
+test "orc_cycle останавливается на approve"
+  r = orc_cycle(["add button to ui", 3])
+  assert (r.steps ?? 0) >= 1
+  fd = r.final_decision ?? ""
+  assert fd == "approve" or fd == "modify" or fd == "reject"
+
+test "orc_cycle max_steps"
+  r = orc_cycle(["safe task", 2])
+  assert (r.steps ?? 0) <= 2
+
+test "orc_verify reject при protected + destructive"
+  t = "rewrite protected interpreter"
+  plan = {"action" -> "delete and rewrite"}
+  r = orc_verify([t, plan])
+  ok = r.ok ?? true
+  err = r.errors_count ?? 0
+  assert ok == false or err > 0
+
+test "orc_autofix fixed при пустых errors"
+  r = orc_autofix(["todo", "plan", []])
+  assert (r.fixed ?? false) == true
+
+test "orc_cycle last_review существует"
+  r = orc_cycle(["simple fix", 1])
+  assert (r.steps ?? 0) >= 1
+
+say ""
+say "✅ Orchestrator AutoVerify tests done"

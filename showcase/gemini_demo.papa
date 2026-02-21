@@ -1,0 +1,16 @@
+// PAPA Lang — Gemini Integration Demo
+
+use gemini
+use ai_router
+
+// Простой запрос
+let answer = gemini_ask("Что такое PAPA Lang?")
+print("Gemini ответ: " + answer)
+
+// Triple AI Router (fallback chain)
+let smart = ai_ask_smart("Напиши hello world на PAPA Lang")
+print("Smart AI: " + smart)
+
+assert answer != ""
+assert smart != ""
+print("✅ Gemini integration tests passed")

@@ -1,0 +1,26 @@
+// PAPA Lang — Revolutionary Features Tests
+
+use evolve
+use infra
+use swarm
+
+// Test 1: Self-Evolving
+let analysis = evolve_analyze()
+assert analysis.total_files > 0
+assert analysis.total_functions >= 0
+print("✅ evolve_analyze works")
+
+// Test 2: Infra
+let svc = service("test-app", {"port": 3000, "domain": "test.papa-ai.ae"})
+assert svc.name == "test-app"
+assert svc.port == 3000
+print("✅ infra service definition works")
+
+// Test 3: Swarm
+let a = agent("test", "tester", "test task")
+assert a.name == "test"
+assert a.status == "pending"
+print("✅ swarm agent creation works")
+
+print("")
+print("🎉 All revolutionary feature tests passed!")

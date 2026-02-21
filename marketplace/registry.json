@@ -1,0 +1,39 @@
+{
+  "name": "PAPA MCP Marketplace",
+  "version": "1.0.0",
+  "url": "https://marketplace.papa-ai.ae",
+  "packages": [
+    {
+      "name": "papa-mcp-security",
+      "description": "Security scanner & compliance checker",
+      "version": "1.0.0",
+      "price": "free",
+      "downloads": 0,
+      "tools": ["papa_security_scan", "papa_compliance_check", "papa_audit_log"]
+    },
+    {
+      "name": "papa-mcp-deploy",
+      "description": "Deploy apps from Cursor to DigitalOcean/Yandex Cloud",
+      "version": "1.0.0",
+      "price": "$5/mo",
+      "downloads": 0,
+      "tools": ["papa_deploy", "papa_rollback", "papa_status"]
+    },
+    {
+      "name": "papa-mcp-ai",
+      "description": "Triple AI (Claude+GPT+Gemini) from your IDE",
+      "version": "1.0.0",
+      "price": "$10/mo",
+      "downloads": 0,
+      "tools": ["papa_ai_ask", "papa_ai_think", "papa_ai_code", "papa_ai_search"]
+    },
+    {
+      "name": "papa-mcp-evolve",
+      "description": "Self-evolving codebase — AI improves your code nightly",
+      "version": "1.0.0",
+      "price": "$15/mo",
+      "downloads": 0,
+      "tools": ["papa_evolve_analyze", "papa_evolve_suggest", "papa_evolve_run"]
+    }
+  ]
+}

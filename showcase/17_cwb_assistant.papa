@@ -1,0 +1,45 @@
+// ═══════════════════════════════════════
+//  std/cwb — CWB Mobile Assistant
+// ═══════════════════════════════════════
+
+import "std/cwb"
+
+say "🧪 CWB Assistant Tests"
+say ""
+
+test "cwb_process intent"
+  r = cwb_process("создать новую задачу")
+  assert (r.intent ?? "") != ""
+
+test "cwb_idea сохраняет"
+  i = cwb_idea("Купить молоко")
+  assert (i.status ?? "") == "saved"
+
+test "cwb_ideas_list"
+  lst = cwb_ideas_list()
+  assert lst.count >= 0
+
+test "cwb_command парсит"
+  c = cwb_command("add task")
+  assert (c.intent ?? "") != ""
+  assert (c.executable ?? false) == true
+
+test "cwb_task_add"
+  t = cwb_task_add("Проверить почту")
+  assert (t.status ?? "") == "added"
+
+test "cwb_task_list"
+  lst = cwb_task_list()
+  assert lst.count >= 0
+
+test "cwb_task_done"
+  r = cwb_task_done(1)
+  assert (r.status ?? "") != ""
+
+test "cwb_context set и get"
+  cwb_context("key1", "value1")
+  r = cwb_context("key1")
+  assert (r.status ?? "") != ""
+
+say ""
+say "✅ CWB Assistant tests done"

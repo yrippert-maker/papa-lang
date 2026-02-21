@@ -1,0 +1,18 @@
+// PAPA Lang std/guard — AI Guardrails for Enterprise
+// PII detection, prompt injection, output sanitization, rate limit, cost control
+
+module guard
+
+// guarded_ask(prompt: text, actor: text) -> map
+// Защищённый AI вызов с проверками: rate_limit, pii, injection, topic, cost
+
+// guard_configure(config: map)
+// Настройка: pii_detection, prompt_injection_check, max_calls_per_minute,
+//            max_cost_per_day, blocked_topics, require_audit_log, data_residency
+
+// guard_compliance_report() -> map
+// Отчёт: total_calls, total_cost, audit_chain, compliance_status
+
+// Внутренние: _detect_pii, _redact_pii, _check_injection, _sanitize_output
+// PII: email, phone, credit_card, passport, SNILS
+// Injection patterns: "ignore previous instructions", "jailbreak", "DAN mode"

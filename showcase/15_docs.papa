@@ -1,0 +1,35 @@
+// ═══════════════════════════════════════
+//  std/docs — AI Document Generation
+// ═══════════════════════════════════════
+
+import "std/docs"
+
+say "🧪 Docs Tests"
+say ""
+
+test "docs_brand возвращает name и tagline"
+  b = docs_brand("Acme Inc")
+  assert (b.name ?? "") == "Acme Inc"
+  assert (b.tagline ?? "") != ""
+
+test "docs_logo возвращает text"
+  l = docs_logo("MyBrand")
+  assert (l.text ?? "") != ""
+
+test "docs_generate создаёт content"
+  data = {"recipient" -> "John"}
+  d = docs_generate("letter", data)
+  assert (d.content ?? "") != ""
+  assert (d.template ?? "") == "letter"
+
+test "docs_templates список"
+  t = docs_templates()
+  assert t.count >= 0
+
+test "docs_preview_letterhead"
+  brand = {"name" -> "Corp"}
+  p = docs_preview_letterhead(brand)
+  assert (p.html ?? "") != ""
+
+say ""
+say "✅ Docs tests done"

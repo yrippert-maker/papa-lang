@@ -1,0 +1,821 @@
+{
+  "timestamp": "2026-02-21T11:43:13.006025",
+  "total_files": 67,
+  "total_lines": 2911,
+  "total_functions": 276,
+  "avg_file_size": 43.4,
+  "function_frequency": {
+    "get": 104,
+    "print": 95,
+    "assert_eq": 57,
+    "str": 47,
+    "assert": 32,
+    "assert_true": 25,
+    "fib": 13,
+    "double": 12,
+    "ai_budget_log": 11,
+    "secret": 11,
+    "guarded_ask": 9,
+    "greet": 9,
+    "ai_budget_set": 8,
+    "create": 7,
+    "swarm_destroy": 7,
+    "add": 7,
+    "chain_record": 7,
+    "voice_execute": 7,
+    "sqrt": 7,
+    "guard_configure": 6
+  },
+  "import_frequency": {
+    "chain": 5,
+    "math": 5,
+    "guard": 4,
+    "swarm": 4,
+    "infra": 4,
+    "verify": 4,
+    "orchestrator": 3,
+    "json": 3,
+    "ai_router": 3,
+    "evolve": 3
+  },
+  "duplicated_patterns": 64,
+  "duplicated_pattern_samples": {
+    "get_weights()\n  return {\"L1_finance\" -> 0.30, \"L2_business\" -> 0.20, \"L3_health\" -> 0.07, \"L4_psycho\" -> 0.07, \"L5_social\" -> 0.12, \"L6_macro\" -> 0.12, \"L7_geolegal\" -> 0.07}": 2,
+    "if base < 0\n    base = 0\n  return base": 2,
+    "test \"rating AAA\"\n  assert_eq(calculate_rating(960), \"AAA\")": 2,
+    "test \"rating BBB\"\n  assert_eq(calculate_rating(680), \"BBB\")": 2,
+    "test \"rating D\"\n  assert_eq(calculate_rating(100), \"D\")": 2
+  },
+  "unused_modules": [],
+  "most_used_modules": {
+    "chain": 5,
+    "math": 5,
+    "guard": 4,
+    "swarm": 4,
+    "infra": 4
+  },
+  "stdlib_modules": [
+    "json",
+    "evolve",
+    "fs",
+    "gemini",
+    "voice_prog",
+    "time",
+    "orchestrator",
+    "chain",
+    "string",
+    "telegram",
+    "mcp",
+    "ai_router",
+    "voice",
+    "browser",
+    "design",
+    "swarm",
+    "ai",
+    "math",
+    "guard",
+    "docs",
+    "verify",
+    "cwb",
+    "infra",
+    "studio",
+    "http"
+  ],
+  "files_with_todos": [],
+  "large_files": [
+    {
+      "file": "enterprise/ras/index.papa",
+      "lines": 120
+    },
+    {
+      "file": "enterprise/legal/index.papa",
+      "lines": 102
+    },
+    {
+      "file": "tests/test_wave2_wave3.papa",
+      "lines": 336
+    },
+    {
+      "file": "examples/05_full_demo.papa",
+      "lines": 154
+    },
+    {
+      "file": "showcase/wave2_wave3_demo.papa",
+      "lines": 256
+    }
+  ],
+  "low_comment_files": [
+    {
+      "file": "enterprise/ras/index.papa",
+      "ratio": 0.07
+    },
+    {
+      "file": "enterprise/legal/index.papa",
+      "ratio": 0.09
+    },
+    {
+      "file": "examples/15_v07_features.papa",
+      "ratio": 0.09
+    },
+    {
+      "file": "examples/09_models.papa",
+      "ratio": 0.07
+    },
+    {
+      "file": "examples/10_stdlib.papa",
+      "ratio": 0.06
+    },
+    {
+      "file": "examples/05_full_demo.papa",
+      "ratio": 0.09
+    },
+    {
+      "file": "showcase/12_orchestrator_safety.papa",
+      "ratio": 0.05
+    },
+    {
+      "file": "showcase/13_orchestrator_autoverify.papa",
+      "ratio": 0.06
+    },
+    {
+      "file": "showcase/17_cwb_assistant.papa",
+      "ratio": 0.07
+    },
+    {
+      "file": "showcase/15_docs.papa",
+      "ratio": 0.09
+    }
+  ],
+  "file_stats": [
+    {
+      "file": "ecosystem/mcp-security.papa",
+      "lines": 9,
+      "functions": 0,
+      "imports": 2,
+      "comments": 5,
+      "comment_ratio": 0.56,
+      "todos": 0,
+      "max_line_length": 55
+    },
+    {
+      "file": "ecosystem/orchestrator/index.papa",
+      "lines": 13,
+      "functions": 0,
+      "imports": 2,
+      "comments": 8,
+      "comment_ratio": 0.62,
+      "todos": 0,
+      "max_line_length": 75
+    },
+    {
+      "file": "enterprise/ras/index.papa",
+      "lines": 120,
+      "functions": 34,
+      "imports": 0,
+      "comments": 9,
+      "comment_ratio": 0.07,
+      "todos": 0,
+      "max_line_length": 160
+    },
+    {
+      "file": "enterprise/finance/index.papa",
+      "lines": 91,
+      "functions": 31,
+      "imports": 2,
+      "comments": 9,
+      "comment_ratio": 0.1,
+      "todos": 0,
+      "max_line_length": 109
+    },
+    {
+      "file": "enterprise/legal/index.papa",
+      "lines": 102,
+      "functions": 29,
+      "imports": 0,
+      "comments": 9,
+      "comment_ratio": 0.09,
+      "todos": 0,
+      "max_line_length": 103
+    },
+    {
+      "file": "tests/test_wave2_wave3.papa",
+      "lines": 336,
+      "functions": 82,
+      "imports": 9,
+      "comments": 36,
+      "comment_ratio": 0.11,
+      "todos": 0,
+      "max_line_length": 104
+    },
+    {
+      "file": "std/json.papa",
+      "lines": 7,
+      "functions": 5,
+      "imports": 1,
+      "comments": 7,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 67
+    },
+    {
+      "file": "std/evolve.papa",
+      "lines": 20,
+      "functions": 5,
+      "imports": 0,
+      "comments": 13,
+      "comment_ratio": 0.65,
+      "todos": 0,
+      "max_line_length": 80
+    },
+    {
+      "file": "std/fs.papa",
+      "lines": 9,
+      "functions": 7,
+      "imports": 1,
+      "comments": 9,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 59
+    },
+    {
+      "file": "std/gemini.papa",
+      "lines": 21,
+      "functions": 9,
+      "imports": 0,
+      "comments": 13,
+      "comment_ratio": 0.62,
+      "todos": 0,
+      "max_line_length": 78
+    },
+    {
+      "file": "std/voice_prog.papa",
+      "lines": 23,
+      "functions": 7,
+      "imports": 0,
+      "comments": 15,
+      "comment_ratio": 0.65,
+      "todos": 0,
+      "max_line_length": 81
+    },
+    {
+      "file": "std/time.papa",
+      "lines": 8,
+      "functions": 8,
+      "imports": 1,
+      "comments": 8,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 75
+    },
+    {
+      "file": "std/orchestrator.papa",
+      "lines": 34,
+      "functions": 10,
+      "imports": 0,
+      "comments": 24,
+      "comment_ratio": 0.71,
+      "todos": 0,
+      "max_line_length": 61
+    },
+    {
+      "file": "std/chain.papa",
+      "lines": 26,
+      "functions": 13,
+      "imports": 0,
+      "comments": 18,
+      "comment_ratio": 0.69,
+      "todos": 0,
+      "max_line_length": 78
+    },
+    {
+      "file": "std/string.papa",
+      "lines": 18,
+      "functions": 16,
+      "imports": 1,
+      "comments": 18,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 66
+    },
+    {
+      "file": "std/telegram.papa",
+      "lines": 11,
+      "functions": 6,
+      "imports": 0,
+      "comments": 10,
+      "comment_ratio": 0.91,
+      "todos": 0,
+      "max_line_length": 69
+    },
+    {
+      "file": "std/mcp.papa",
+      "lines": 21,
+      "functions": 7,
+      "imports": 0,
+      "comments": 16,
+      "comment_ratio": 0.76,
+      "todos": 0,
+      "max_line_length": 66
+    },
+    {
+      "file": "std/ai_router.papa",
+      "lines": 18,
+      "functions": 8,
+      "imports": 0,
+      "comments": 11,
+      "comment_ratio": 0.61,
+      "todos": 0,
+      "max_line_length": 65
+    },
+    {
+      "file": "std/voice.papa",
+      "lines": 29,
+      "functions": 7,
+      "imports": 0,
+      "comments": 23,
+      "comment_ratio": 0.79,
+      "todos": 0,
+      "max_line_length": 50
+    },
+    {
+      "file": "std/browser.papa",
+      "lines": 12,
+      "functions": 7,
+      "imports": 0,
+      "comments": 11,
+      "comment_ratio": 0.92,
+      "todos": 0,
+      "max_line_length": 53
+    },
+    {
+      "file": "std/design.papa",
+      "lines": 31,
+      "functions": 8,
+      "imports": 0,
+      "comments": 23,
+      "comment_ratio": 0.74,
+      "todos": 0,
+      "max_line_length": 56
+    },
+    {
+      "file": "std/swarm.papa",
+      "lines": 19,
+      "functions": 6,
+      "imports": 0,
+      "comments": 12,
+      "comment_ratio": 0.63,
+      "todos": 0,
+      "max_line_length": 58
+    },
+    {
+      "file": "std/ai.papa",
+      "lines": 18,
+      "functions": 6,
+      "imports": 0,
+      "comments": 13,
+      "comment_ratio": 0.72,
+      "todos": 0,
+      "max_line_length": 64
+    },
+    {
+      "file": "std/math.papa",
+      "lines": 21,
+      "functions": 17,
+      "imports": 1,
+      "comments": 21,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 61
+    },
+    {
+      "file": "std/guard.papa",
+      "lines": 18,
+      "functions": 3,
+      "imports": 0,
+      "comments": 12,
+      "comment_ratio": 0.67,
+      "todos": 0,
+      "max_line_length": 81
+    },
+    {
+      "file": "std/docs.papa",
+      "lines": 19,
+      "functions": 5,
+      "imports": 0,
+      "comments": 14,
+      "comment_ratio": 0.74,
+      "todos": 0,
+      "max_line_length": 51
+    },
+    {
+      "file": "std/verify.papa",
+      "lines": 21,
+      "functions": 7,
+      "imports": 0,
+      "comments": 14,
+      "comment_ratio": 0.67,
+      "todos": 0,
+      "max_line_length": 95
+    },
+    {
+      "file": "std/cwb.papa",
+      "lines": 23,
+      "functions": 8,
+      "imports": 0,
+      "comments": 17,
+      "comment_ratio": 0.74,
+      "todos": 0,
+      "max_line_length": 42
+    },
+    {
+      "file": "std/infra.papa",
+      "lines": 19,
+      "functions": 6,
+      "imports": 0,
+      "comments": 12,
+      "comment_ratio": 0.63,
+      "todos": 0,
+      "max_line_length": 53
+    },
+    {
+      "file": "std/studio.papa",
+      "lines": 13,
+      "functions": 3,
+      "imports": 0,
+      "comments": 10,
+      "comment_ratio": 0.77,
+      "todos": 0,
+      "max_line_length": 46
+    },
+    {
+      "file": "std/http.papa",
+      "lines": 8,
+      "functions": 6,
+      "imports": 1,
+      "comments": 8,
+      "comment_ratio": 1.0,
+      "todos": 0,
+      "max_line_length": 61
+    },
+    {
+      "file": "papa_modules/demo-pkg/index.papa",
+      "lines": 3,
+      "functions": 2,
+      "imports": 0,
+      "comments": 1,
+      "comment_ratio": 0.33,
+      "todos": 0,
+      "max_line_length": 57
+    },
+    {
+      "file": "examples/06_server.papa",
+      "lines": 28,
+      "functions": 0,
+      "imports": 0,
+      "comments": 3,
+      "comment_ratio": 0.11,
+      "todos": 0,
+      "max_line_length": 59
+    },
+    {
+      "file": "examples/02_safety.papa",
+      "lines": 64,
+      "functions": 4,
+      "imports": 0,
+      "comments": 15,
+      "comment_ratio": 0.23,
+      "todos": 0,
+      "max_line_length": 59
+    },
+    {
+      "file": "examples/15_v07_features.papa",
+      "lines": 92,
+      "functions": 23,
+      "imports": 0,
+      "comments": 8,
+      "comment_ratio": 0.09,
+      "todos": 0,
+      "max_line_length": 58
+    },
+    {
+      "file": "examples/08_async.papa",
+      "lines": 19,
+      "functions": 2,
+      "imports": 0,
+      "comments": 3,
+      "comment_ratio": 0.16,
+      "todos": 0,
+      "max_line_length": 46
+    },
+    {
+      "file": "examples/utils.papa",
+      "lines": 3,
+      "functions": 2,
+      "imports": 0,
+      "comments": 1,
+      "comment_ratio": 0.33,
+      "todos": 0,
+      "max_line_length": 44
+    },
+    {
+      "file": "examples/09_models.papa",
+      "lines": 44,
+      "functions": 11,
+      "imports": 0,
+      "comments": 3,
+      "comment_ratio": 0.07,
+      "todos": 0,
+      "max_line_length": 68
+    },
+    {
+      "file": "examples/03_functions.papa",
+      "lines": 72,
+      "functions": 17,
+      "imports": 0,
+      "comments": 10,
+      "comment_ratio": 0.14,
+      "todos": 0,
+      "max_line_length": 54
+    },
+    {
+      "file": "examples/11_packages.papa",
+      "lines": 13,
+      "functions": 4,
+      "imports": 1,
+      "comments": 4,
+      "comment_ratio": 0.31,
+      "todos": 0,
+      "max_line_length": 49
+    },
+    {
+      "file": "examples/10_stdlib.papa",
+      "lines": 54,
+      "functions": 24,
+      "imports": 3,
+      "comments": 3,
+      "comment_ratio": 0.06,
+      "todos": 0,
+      "max_line_length": 52
+    },
+    {
+      "file": "examples/07_imports.papa",
+      "lines": 24,
+      "functions": 11,
+      "imports": 5,
+      "comments": 3,
+      "comment_ratio": 0.12,
+      "todos": 0,
+      "max_line_length": 71
+    },
+    {
+      "file": "examples/05_full_demo.papa",
+      "lines": 154,
+      "functions": 29,
+      "imports": 0,
+      "comments": 14,
+      "comment_ratio": 0.09,
+      "todos": 0,
+      "max_line_length": 76
+    },
+    {
+      "file": "examples/04_server.papa",
+      "lines": 26,
+      "functions": 1,
+      "imports": 0,
+      "comments": 5,
+      "comment_ratio": 0.19,
+      "todos": 0,
+      "max_line_length": 46
+    },
+    {
+      "file": "examples/01_hello.papa",
+      "lines": 40,
+      "functions": 2,
+      "imports": 0,
+      "comments": 9,
+      "comment_ratio": 0.23,
+      "todos": 0,
+      "max_line_length": 62
+    },
+    {
+      "file": "examples/deploy_demo.papa",
+      "lines": 23,
+      "functions": 3,
+      "imports": 1,
+      "comments": 4,
+      "comment_ratio": 0.17,
+      "todos": 0,
+      "max_line_length": 50
+    },
+    {
+      "file": "examples/demo-pkg/index.papa",
+      "lines": 3,
+      "functions": 2,
+      "imports": 0,
+      "comments": 1,
+      "comment_ratio": 0.33,
+      "todos": 0,
+      "max_line_length": 57
+    },
+    {
+      "file": "showcase/14_design_3ai.papa",
+      "lines": 39,
+      "functions": 10,
+      "imports": 1,
+      "comments": 4,
+      "comment_ratio": 0.1,
+      "todos": 0,
+      "max_line_length": 55
+    },
+    {
+      "file": "showcase/07_mcp_integration.papa",
+      "lines": 59,
+      "functions": 29,
+      "imports": 1,
+      "comments": 8,
+      "comment_ratio": 0.14,
+      "todos": 0,
+      "max_line_length": 118
+    },
+    {
+      "file": "showcase/wave2_wave3_demo.papa",
+      "lines": 256,
+      "functions": 145,
+      "imports": 9,
+      "comments": 72,
+      "comment_ratio": 0.28,
+      "todos": 0,
+      "max_line_length": 398
+    },
+    {
+      "file": "showcase/06_voice_agent.papa",
+      "lines": 63,
+      "functions": 39,
+      "imports": 1,
+      "comments": 9,
+      "comment_ratio": 0.14,
+      "todos": 0,
+      "max_line_length": 95
+    },
+    {
+      "file": "showcase/test_revolutionary.papa",
+      "lines": 26,
+      "functions": 8,
+      "imports": 3,
+      "comments": 4,
+      "comment_ratio": 0.15,
+      "todos": 0,
+      "max_line_length": 74
+    },
+    {
+      "file": "showcase/gemini_demo.papa",
+      "lines": 16,
+      "functions": 6,
+      "imports": 2,
+      "comments": 3,
+      "comment_ratio": 0.19,
+      "todos": 0,
+      "max_line_length": 59
+    },
+    {
+      "file": "showcase/guard_demo.papa",
+      "lines": 45,
+      "functions": 17,
+      "imports": 2,
+      "comments": 8,
+      "comment_ratio": 0.18,
+      "todos": 0,
+      "max_line_length": 74
+    },
+    {
+      "file": "showcase/test_enterprise.papa",
+      "lines": 36,
+      "functions": 17,
+      "imports": 4,
+      "comments": 5,
+      "comment_ratio": 0.14,
+      "todos": 0,
+      "max_line_length": 64
+    },
+    {
+      "file": "showcase/11_design_system.papa",
+      "lines": 71,
+      "functions": 40,
+      "imports": 1,
+      "comments": 9,
+      "comment_ratio": 0.13,
+      "todos": 0,
+      "max_line_length": 82
+    },
+    {
+      "file": "showcase/10_cost_guardrails.papa",
+      "lines": 71,
+      "functions": 48,
+      "imports": 1,
+      "comments": 8,
+      "comment_ratio": 0.11,
+      "todos": 0,
+      "max_line_length": 98
+    },
+    {
+      "file": "showcase/12_orchestrator_safety.papa",
+      "lines": 63,
+      "functions": 15,
+      "imports": 1,
+      "comments": 3,
+      "comment_ratio": 0.05,
+      "todos": 0,
+      "max_line_length": 58
+    },
+    {
+      "file": "showcase/16_studio.papa",
+      "lines": 24,
+      "functions": 6,
+      "imports": 1,
+      "comments": 3,
+      "comment_ratio": 0.12,
+      "todos": 0,
+      "max_line_length": 87
+    },
+    {
+      "file": "showcase/09_telegram_bot.papa",
+      "lines": 70,
+      "functions": 44,
+      "imports": 1,
+      "comments": 10,
+      "comment_ratio": 0.14,
+      "todos": 0,
+      "max_line_length": 77
+    },
+    {
+      "file": "showcase/blockchain_demo.papa",
+      "lines": 32,
+      "functions": 18,
+      "imports": 1,
+      "comments": 6,
+      "comment_ratio": 0.19,
+      "todos": 0,
+      "max_line_length": 79
+    },
+    {
+      "file": "showcase/13_orchestrator_autoverify.papa",
+      "lines": 52,
+      "functions": 16,
+      "imports": 1,
+      "comments": 3,
+      "comment_ratio": 0.06,
+      "todos": 0,
+      "max_line_length": 60
+    },
+    {
+      "file": "showcase/vericoding_demo.papa",
+      "lines": 32,
+      "functions": 15,
+      "imports": 1,
+      "comments": 5,
+      "comment_ratio": 0.16,
+      "todos": 0,
+      "max_line_length": 91
+    },
+    {
+      "file": "showcase/17_cwb_assistant.papa",
+      "lines": 45,
+      "functions": 16,
+      "imports": 1,
+      "comments": 3,
+      "comment_ratio": 0.07,
+      "todos": 0,
+      "max_line_length": 42
+    },
+    {
+      "file": "showcase/08_browser_scraping.papa",
+      "lines": 61,
+      "functions": 29,
+      "imports": 1,
+      "comments": 7,
+      "comment_ratio": 0.11,
+      "todos": 0,
+      "max_line_length": 115
+    },
+    {
+      "file": "showcase/swarm_demo.papa",
+      "lines": 15,
+      "functions": 7,
+      "imports": 1,
+      "comments": 5,
+      "comment_ratio": 0.33,
+      "todos": 0,
+      "max_line_length": 84
+    },
+    {
+      "file": "showcase/15_docs.papa",
+      "lines": 35,
+      "functions": 11,
+      "imports": 1,
+      "comments": 3,
+      "comment_ratio": 0.09,
+      "todos": 0,
+      "max_line_length": 43
+    }
+  ]
+}

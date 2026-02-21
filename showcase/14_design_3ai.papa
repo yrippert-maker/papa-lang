@@ -1,0 +1,39 @@
+// ═══════════════════════════════════════
+//  std/design — 3 AI Intelligence
+//  design_propose, design_from_industry, design_refine
+// ═══════════════════════════════════════
+
+import "std/design"
+
+say "🧪 Design 3AI Tests"
+say ""
+
+test "design_propose возвращает layout и palette"
+  req = {"layout" -> "landing", "palette" -> "#2563EB"}
+  p = design_propose(req)
+  assert (p.layout ?? {}) != {}
+  assert (p.palette ?? {}) != {}
+
+test "design_from_industry fintech"
+  r = design_from_industry("fintech")
+  pal = r.palette ?? {}
+  hint = r.layout_hint ?? ""
+  assert hint != ""
+
+test "design_from_industry healthcare"
+  r = design_from_industry("healthcare")
+  pal = r.palette ?? {}
+  assert pal != {}
+
+test "design_refine с variant"
+  v = {"primary" -> "#333"}
+  r = design_refine("improve form", v)
+  assert (r.score ?? 0) >= 0
+  assert (r.changes ?? "") != ""
+
+test "design_refine без variant"
+  r = design_refine("simple page")
+  assert (r.score ?? 0) >= 0
+
+say ""
+say "✅ Design 3AI tests done"

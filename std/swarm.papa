@@ -1,0 +1,19 @@
+// PAPA Lang std/swarm — Agent Swarm
+// Параллельные AI агенты для сложных задач
+
+module swarm
+
+// agent(name: text, role: text, task: text) -> map
+// Создать агента
+
+// swarm_run(agents: list) -> list
+// Запустить рой агентов параллельно
+
+// swarm_orchestrated(goal: text, num_agents: int) -> map
+// Координатор разбивает цель → агенты → мердж результатов
+
+// swarm_pipeline(input: text, stages: list) -> text
+// Конвейер агентов (последовательный)
+
+// swarm_debate(topic: text, rounds: int) -> map
+// Дебаты между Pro и Con агентами + судья

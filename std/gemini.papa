@@ -1,0 +1,21 @@
+// PAPA Lang std/gemini — Gemini AI Module
+// Третий AI провайдер: Claude (primary) → GPT (fallback) → Gemini (fallback2)
+
+module gemini
+
+// gemini_ask(prompt: text) -> text
+// Gemini API call — текстовый запрос
+
+// gemini_think(prompt: text, level: text) -> text
+// Gemini с thinking для сложных задач (gemini-3-flash-preview)
+
+// gemini_code(task: text) -> text
+// Gemini Code Execution — выполнение Python кода
+
+// gemini_vision(image_url: text, prompt: text) -> text
+// Gemini Vision — анализ изображений
+
+// gemini_search(query: text) -> text
+// Gemini с Google Search grounding
+
+// Требует: GOOGLE_API_KEY в env

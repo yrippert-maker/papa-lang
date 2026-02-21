@@ -1,0 +1,13 @@
+// ═══════════════════════════════════════
+//  ecosystem/orchestrator
+//  Orchestrator Safety Layer — точка входа
+// ═══════════════════════════════════════
+
+import "std/orchestrator"
+
+// Реэкспорт всех функций orchestrator
+// orc_config, orc_review, orc_check_file, orc_check_arch,
+// orc_check_deps, orc_validate_prompt, orc_log,
+// orc_verify, orc_autofix, orc_cycle
+
+say "Orchestrator ready — use orc_review, orc_check_file, orc_verify, etc."

@@ -1,0 +1,23 @@
+// PAPA Lang std/voice_prog — Voice Programming
+// Code by speaking — Gemini Live API / Web Speech API
+
+module voice_prog
+
+// voice_start()
+// Запуск голосового режима: слушаем → интерпретируем → выполняем
+
+// voice_interpret(speech: text) -> map
+// Интерпретация команды: generate_code | deploy | test | query | evolve | status
+// Возвращает: action, response, details
+
+// voice_listen() -> text
+// Слушание через Web Speech API / Gemini Live (CLI fallback: stdin)
+
+// voice_speak(text: text)
+// TTS через Gemini / system
+
+// voice_review(file: text) -> map
+// Голосовой code review — объяснение как коллеге
+
+// voice_tutor(topic: text)
+// Интерактивный голосовой помощник по теме

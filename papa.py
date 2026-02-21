@@ -14,6 +14,8 @@ Usage:
   papa lex <file.papa>     Show tokens (debug)
   papa ast <file.papa>     Show AST (debug)
   papa version             Show version
+  papa evolve [analyze|suggest|run|pr]  Self-evolving codebase
+  papa marketplace           List MCP packages
 """
 
 import sys
@@ -167,6 +169,23 @@ def cmd_repl():
     main()
 
 
+
+def cmd_marketplace():
+    """List MCP marketplace packages."""
+    import json
+    registry_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "marketplace_registry.json")
+    if not os.path.isfile(registry_path):
+        print("\n  Marketplace registry not found.\n")
+        return
+    with open(registry_path, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    print("\n  PAPA MCP Marketplace")
+    print("  " + "=" * 40)
+    for pkg in reg.get("packages", []):
+        tier = pkg.get("tier", "free")
+        print(f"  • {pkg.get('name')} [{tier}] — {pkg.get('description', '')[:50]}...")
+    print()
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__)
@@ -206,6 +225,12 @@ def main():
         cmd_lex(sys.argv[2])
     elif cmd == 'ast' and len(sys.argv) > 2:
         cmd_ast(sys.argv[2])
+    elif cmd == 'marketplace':
+        cmd_marketplace()
+    elif cmd == 'evolve':
+        from lib.cli_evolve import handle_evolve
+        project_root = os.path.dirname(os.path.abspath(__file__))
+        handle_evolve(sys.argv[2:] if len(sys.argv) > 2 else ['analyze'], project_root)
     elif cmd.endswith('.papa'):
         cmd_run(cmd)
     else:

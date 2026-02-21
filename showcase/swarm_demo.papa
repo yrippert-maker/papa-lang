@@ -1,0 +1,15 @@
+// PAPA Lang — Agent Swarm Demo
+
+use swarm
+
+// Простой рой — 4 агента
+let agents = [
+  agent("Architect", "Senior software architect", "Analyze PAPA Lang architecture"),
+  agent("Security", "Security engineer", "Find security issues in PAPA Lang"),
+  agent("UX", "UX designer", "Suggest improvements for PAPA Studio"),
+  agent("DevOps", "DevOps engineer", "Optimize CI/CD for PAPA ecosystem")
+]
+
+// swarm_run(agents) — параллельный запуск
+// swarm_orchestrated(goal, 5) — координированный рой
+// swarm_debate(topic, 3) — дебаты Pro vs Con
