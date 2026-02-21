@@ -152,7 +152,7 @@ say 'hello'
 //   Замените ' на "
 ```
 
-## Стандартная библиотека (18 модулей)
+## Стандартная библиотека (25 модулей)
 
 | Модуль | Описание |
 |--------|----------|
@@ -168,6 +168,19 @@ say 'hello'
 | `std/telegram` | Telegram Bot API — messaging, commands |
 | `std/ai` | ai_budget — cost guardrails |
 | `std/design` | AI design — tokens, components, palettes |
+| `std/orchestrator` | AI safety layer — review, verify, autofix cycle |
+| `std/ai_router` | Smart AI model routing — Claude, GPT, Gemini |
+| `std/evolve` | Self-evolving code analysis |
+| `std/swarm` | Multi-agent swarm — consensus, delegation |
+| `std/gemini` | Google Gemini integration |
+| `std/guard` | AI guardrails — PII, injection, cost control |
+| `std/infra` | Infrastructure management |
+| `std/studio` | Development studio — analyze, structure, estimate |
+| `std/docs` | Document generation — brand, logo, templates |
+| `std/cwb` | CWB Mobile Assistant — tasks, ideas, commands |
+| `std/chain` | Blockchain audit trail — GDPR, 152-ФЗ, HIPAA |
+| `std/verify` | Vericoding — AI-verified code + formal proofs |
+| `std/voice_prog` | Voice programming — code by speaking |
 
 ## Структура проекта
 
