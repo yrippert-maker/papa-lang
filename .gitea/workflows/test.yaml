@@ -1,0 +1,38 @@
+name: PAPA Lang CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run all tests
+        run: python3 papa.py test
+
+      - name: Run Wave 2 & Wave 3 tests
+        run: python3 papa.py test tests/test_wave2_wave3.papa
+
+      - name: Run core std tests
+        run: python3 papa.py test tests/test_core_std.papa
+
+      - name: Type check
+        run: python3 papa.py check examples/12_types.papa || true
+
+      - name: Verify examples compile
+        run: |
+          for f in examples/*.papa; do
+            echo "--- Checking $f ---"
+            python3 papa.py ast "$f" > /dev/null
+          done
