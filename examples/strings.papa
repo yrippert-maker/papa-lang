@@ -1,0 +1,8 @@
+name = "PAPA Lang"
+say name.upper()
+say name.lower()
+say name.length
+say name.contains("Lang")
+say name.replace("Lang", "Language")
+csv = "a,b,c,d"
+say csv.split(",")

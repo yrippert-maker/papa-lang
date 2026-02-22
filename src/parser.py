@@ -38,6 +38,8 @@ class Parser:
         self.tokens = tokens
         self.pos = 0
         self.source_lines = source.split('\n') if source else []
+        self.errors: List[ParseError] = []
+        self.max_errors = 20
 
     def peek(self) -> Token:
         if self.pos < len(self.tokens):
@@ -67,6 +69,23 @@ class Parser:
             return self.advance()
         return None
 
+    TYPE_TOKEN_NAMES = {
+        TokenType.MAYBE: "maybe",
+        TokenType.LIST: "list",
+        TokenType.MAP: "map",
+        TokenType.SECRET: "secret",
+    }
+
+    def _parse_type_name(self) -> str:
+        """Parse type identifier: IDENT or maybe/list/map/secret keyword."""
+        t = self.peek()
+        if t.type == TokenType.IDENT:
+            return self.advance().value
+        if t.type in self.TYPE_TOKEN_NAMES:
+            self.advance()
+            return self.TYPE_TOKEN_NAMES[t.type]
+        raise ParseError(f"Ожидалось имя типа, получено {t.type.name}", t, self.source_lines)
+
     def skip_newlines(self):
         while self.peek().type == TokenType.NEWLINE:
             self.advance()
@@ -74,16 +93,55 @@ class Parser:
     def error(self, message: str) -> ParseError:
         return ParseError(message, self.peek(), self.source_lines)
 
+    def record_error(self, message: str = "") -> None:
+        """Record parse error and optionally raise if limit reached."""
+        token = self.peek()
+        msg = message or f"Неожиданный токен: {token.type.name} ({token.value!r})"
+        err = ParseError(msg, token, self.source_lines)
+        self.errors.append(err)
+        if len(self.errors) >= self.max_errors:
+            raise self._raise_all_errors()
+
+    def synchronize(self) -> None:
+        """Skip tokens until next statement boundary."""
+        while self.peek().type not in (
+            TokenType.EOF,
+            TokenType.NEWLINE,
+            TokenType.DEDENT,
+        ):
+            self.advance()
+        self.skip_newlines()
+
+    def _raise_all_errors(self) -> None:
+        """Build and raise single error with all collected messages."""
+        lines = [f"Найдено {len(self.errors)} ошибок парсинга:"]
+        for i, err in enumerate(self.errors[:10], 1):
+            lines.append(f"  {i}. Строка {err.token.line}: {err.token.value!r} — {str(err).strip()}")
+        if len(self.errors) > 10:
+            lines.append(f"  ... и ещё {len(self.errors) - 10} ошибок")
+        msg = "\n".join(lines)
+        raise ParseError(msg, self.peek(), self.source_lines)
+
     # ── Main parse ──
 
     def parse(self) -> Program:
+        self.errors = []
         self.skip_newlines()
         stmts = []
         while self.peek().type != TokenType.EOF:
-            stmt = self.parse_statement()
-            if stmt:
-                stmts.append(stmt)
+            try:
+                stmt = self.parse_statement()
+                if stmt:
+                    stmts.append(stmt)
+            except ParseError as e:
+                self.errors.append(e)
+                if len(self.errors) >= self.max_errors:
+                    self._raise_all_errors()
+                self.synchronize()
+                continue
             self.skip_newlines()
+        if self.errors:
+            raise self._raise_all_errors()
         return Program(statements=stmts)
 
     # ── Statements ──
@@ -176,7 +234,7 @@ class Parser:
 
         type_ann = None
         if self.match(TokenType.COLON):
-            type_ann = self.expect(TokenType.IDENT).value
+            type_ann = self._parse_type_name()
 
         self.expect(TokenType.ASSIGN, "Ожидалось '=' после имени переменной")
         value = self.parse_expression()
@@ -209,7 +267,7 @@ class Parser:
         # Assignment with type: name : type = value
         if self.peek().type == TokenType.COLON:
             self.advance()
-            type_ann = self.expect(TokenType.IDENT).value
+            type_ann = self._parse_type_name()
             self.expect(TokenType.ASSIGN)
             value = self.parse_expression()
             self.skip_newlines()
@@ -251,7 +309,7 @@ class Parser:
                             self.pos += 1
                         if self.pos < len(self.tokens):
                             next_t = self.tokens[self.pos]
-                            return next_t.type in (TokenType.ARROW, TokenType.INDENT, TokenType.NEWLINE)
+                            return next_t.type in (TokenType.ARROW, TokenType.INDENT, TokenType.NEWLINE, TokenType.ASSIGN)
                         return False
                 elif t.type in (TokenType.NEWLINE, TokenType.EOF):
                     return False
@@ -274,17 +332,17 @@ class Parser:
             ptype = None
             pdefault = None
             if self.match(TokenType.COLON):
-                ptype = self.expect(TokenType.IDENT).value
+                ptype = self._parse_type_name()
             if self.match(TokenType.ASSIGN):
                 pdefault = self.parse_expression()
             params.append((pname, ptype, pdefault))
             self.match(TokenType.COMMA)
         self.expect(TokenType.RPAREN)
 
-        # Return type
+        # Return type (IDENT or type keywords: maybe, list, map, secret)
         return_type = None
         if self.match(TokenType.ARROW):
-            return_type = self.expect(TokenType.IDENT).value
+            return_type = self._parse_type_name()
 
         # Short form: name(x) -> type = expr
         if self.match(TokenType.ASSIGN):

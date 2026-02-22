@@ -1,0 +1,30 @@
+// ═══ PAPA Lang — Type Checking Tests ═══
+
+// Базовые типы
+int_fn(n: int) -> int = n * 2
+text_fn(s: text) -> text = "hello {s}"
+bool_fn(b: bool) -> bool = not b
+
+test "correct int type"
+  assert int_fn(5) == 10
+
+test "correct text type"
+  assert text_fn("world") == "hello world"
+
+test "correct bool type"
+  assert bool_fn(true) == false
+
+// Maybe / optional
+safe_div(a: int, b: int) -> maybe
+  if b == 0
+    return none()
+  return some(a / b)
+
+test "maybe return type"
+  result = safe_div(10, 2)
+  assert result ?? 0 == 5
+
+test "maybe none return"
+  result = safe_div(10, 0)
+  assert result ?? -1 == -1
+

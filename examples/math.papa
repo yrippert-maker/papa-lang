@@ -1,0 +1,6 @@
+import "std/math"
+say abs(-5)
+say sqrt(16)
+say pi
+say pow(2, 8)
+say max(10, 20)

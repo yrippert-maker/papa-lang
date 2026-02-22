@@ -1,0 +1,6 @@
+mut items = [1, 2, 3, 4, 5]
+say items.count
+items = items.add(6)
+say items
+say items.first
+say items.last
