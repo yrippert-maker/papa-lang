@@ -267,6 +267,12 @@ impl Evaluator {
                 _ => {}
             }
         }
+        // Override from env if set (e.g. pl serve file.pl --port 9080)
+        if let Ok(p) = std::env::var("PAPA_PORT") {
+            if let Ok(n) = p.parse::<u16>() {
+                port = n;
+            }
+        }
         let rt = runtime::RUNTIME.write().map_err(|e| e.to_string())?;
         rt.http.write().map_err(|e| e.to_string())?.set_config(port, &host);
         Ok(Value::None)

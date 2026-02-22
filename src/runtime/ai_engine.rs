@@ -543,4 +543,57 @@ mod tests {
         );
         assert!(engine.list_providers().contains(&"test".to_string()));
     }
+
+    /// Integration tests — require real API keys. Run with:
+    /// OPENAI_API_KEY=sk-... cargo test -- --ignored
+    #[tokio::test]
+    #[ignore]
+    async fn test_openai_real_call() {
+        let engine = AiEngine::new();
+        let result = engine
+            .ask(
+                "Say exactly: PAPA LANG WORKS",
+                Some("openai/gpt-4o-mini"),
+                Some(0.0),
+                Some(50),
+            )
+            .await;
+        assert!(result.is_ok(), "OpenAI call failed: {:?}", result.err());
+        let text = result.unwrap();
+        assert!(
+            text.contains("PAPA") || text.contains("LANG"),
+            "Unexpected response: {}",
+            text
+        );
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_anthropic_real_call() {
+        let engine = AiEngine::new();
+        let result = engine
+            .ask(
+                "Say exactly: PAPA LANG WORKS",
+                Some("anthropic/claude-sonnet-4-20250514"),
+                Some(0.0),
+                Some(50),
+            )
+            .await;
+        assert!(result.is_ok(), "Anthropic call failed: {:?}", result.err());
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_google_real_call() {
+        let engine = AiEngine::new();
+        let result = engine
+            .ask(
+                "Say exactly: PAPA LANG WORKS",
+                Some("google/gemini-2.0-flash"),
+                Some(0.0),
+                Some(50),
+            )
+            .await;
+        assert!(result.is_ok(), "Google call failed: {:?}", result.err());
+    }
 }
