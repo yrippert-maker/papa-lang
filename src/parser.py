@@ -177,6 +177,8 @@ class Parser:
             return self.parse_wait()
         elif token.type == TokenType.ASSERT:
             return self.parse_assert()
+        elif token.type == TokenType.TRY:
+            return self.parse_try_catch()
         elif token.type == TokenType.TYPE:
             return self.parse_type_def()
         elif token.type == TokenType.SERVE:
@@ -507,6 +509,23 @@ class Parser:
         expr = self.parse_expression()
         self.skip_newlines()
         return AssertStatement(expr=expr, line=token.line, col=token.col)
+
+    def parse_try_catch(self) -> "TryCatchNode":
+        token = self.advance()  # consume 'try'
+        self.skip_newlines()
+        try_body = self.parse_block()
+        self.skip_newlines()
+        self.expect(TokenType.CATCH, "Ожидалось 'catch' после блока try")
+        catch_var = self.expect(TokenType.IDENT, "Ожидалось имя переменной после catch").value
+        self.skip_newlines()
+        catch_body = self.parse_block()
+        return TryCatchNode(
+            try_body=try_body,
+            catch_var=catch_var,
+            catch_body=catch_body,
+            line=token.line,
+            col=token.col,
+        )
 
     def parse_type_def(self) -> TypeDef:
         self.advance()  # consume 'type'

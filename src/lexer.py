@@ -79,6 +79,8 @@ class TokenType(Enum):
     REPEAT = auto()
     TIMES = auto()
     WAIT = auto()
+    TRY = auto()
+    CATCH = auto()
 
     # Time units
     SECONDS = auto()
@@ -194,6 +196,8 @@ KEYWORDS = {
     'repeat': TokenType.REPEAT,
     'times': TokenType.TIMES,
     'wait': TokenType.WAIT,
+    'try': TokenType.TRY,
+    'catch': TokenType.CATCH,
     'seconds': TokenType.SECONDS,
     'minutes': TokenType.MINUTES,
     'hours': TokenType.HOURS,

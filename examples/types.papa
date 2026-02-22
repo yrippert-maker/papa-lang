@@ -1,0 +1,19 @@
+// PAPA Lang — type annotations demo
+
+name: string = "hello"
+say name
+
+count: int = 42
+say count
+
+price: float = 9.99
+say price
+
+active: bool = true
+say active
+
+add(a: int, b: int) -> int
+  return a + b
+
+say add(2, 3)
+say add(10, 20)

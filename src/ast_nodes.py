@@ -175,6 +175,14 @@ class AssertStatement(Node):
     message: Optional[str] = None
 
 
+@dataclass
+class TryCatchNode(Node):
+    """try body catch err body"""
+    try_body: List[Any] = field(default_factory=list)
+    catch_var: str = ""
+    catch_body: List[Any] = field(default_factory=list)
+
+
 # ── Definitions ──
 
 @dataclass

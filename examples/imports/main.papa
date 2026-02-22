@@ -1,0 +1,5 @@
+// PAPA Lang — import demo
+
+import "utils"
+say double(7)
+say greet("PAPA")

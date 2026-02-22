@@ -1,0 +1,14 @@
+// PAPA Lang — try/catch demo
+
+try
+  x = 1 / 0
+  say x
+catch err
+  say "Error: {err.message}"
+
+try
+  say "This works"
+  result = 2 + 2
+  say result
+catch e
+  say "Unexpected: {e.message}"

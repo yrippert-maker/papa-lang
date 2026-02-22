@@ -10,6 +10,7 @@ from .ast_nodes import (
     Assignment, Reassignment, SayStatement, LogStatement,
     ReturnStatement, FailStatement, IfStatement, MatchStatement,
     ForLoop, LoopStatement, RepeatStatement, WaitStatement, AssertStatement,
+    TryCatchNode,
     FunctionDef, TypeDef, ModelDef, EnumDef, RouteDef, ServeDef, TestDef, TaskDef, EveryDef,
     Identifier, ImportStatement, FromImportStatement,
 )
@@ -169,6 +170,22 @@ class ExecutorMixin:
         multipliers = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400}
         seconds = float(duration) * multipliers.get(node.unit, 1)
         time.sleep(seconds)
+
+    def exec_TryCatchNode(self, node: TryCatchNode, env: Environment) -> Any:
+        class _ErrorObj:
+            def __init__(self, message: str):
+                self.message = message
+
+        try:
+            for stmt in node.try_body:
+                self.execute(stmt, env)
+        except (ReturnSignal, BreakSignal):
+            raise
+        except (PapaError, FailSignal, Exception) as e:
+            err_obj = _ErrorObj(str(e))
+            env.vars[node.catch_var] = err_obj
+            for stmt in node.catch_body:
+                self.execute(stmt, env)
 
     def exec_AssertStatement(self, node: AssertStatement, env: Environment) -> None:
         result = self.evaluate(node.expr, env)
