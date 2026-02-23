@@ -1,7 +1,45 @@
-/target
-Cargo.lock
-.env
-*.log
-.DS_Store
+# ═══ Python ═══
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# ═══ Coverage ═══
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ═══ PAPA Lang generated ═══
+.papa-evolve-analysis.json
+papa_modules/
+
+# ═══ IDE ═══
+.idea/
+.vscode/
 *.swp
 *.swo
+*~
+
+# ═══ OS ═══
+.DS_Store
+._*
+Thumbs.db
+
+# ═══ Rust build ═══
+target/
+Cargo.lock
+
+# ═══ Testing ═══
+.pytest_cache/
+.mypy_cache/
+
+# ═══ Logs ═══
+*.log
+
+# ═══ SQLite DB ═══
+*.db

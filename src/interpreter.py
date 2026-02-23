@@ -5,8 +5,8 @@ v0.3: HTTP server, imports, async, models.
 v0.4: Full std library (math, string, json, http, fs, time).
 """
 
-import time
 import os
+import time
 from typing import Any, Dict, List, Optional, Set
 
 from .ast_nodes import Program, RouteDef, TestDef, ServeDef
@@ -19,6 +19,7 @@ from .stdlib_agents import (
     _std_voice, _std_mcp, _std_browser, _std_telegram, _std_ai_budget, _std_design,
 )
 from .stdlib_enterprise import _load_orchestrator, _load_docs, _load_studio, _load_cwb
+from .papa_lang_wave2_wave3_modules import WAVE_2_3_LOADERS
 from .server import start_server as _start_server
 from .evaluator import EvaluatorMixin
 from .executor import ExecutorMixin
@@ -42,6 +43,7 @@ STD_MODULE_LOADERS = {
     "docs": _load_docs,
     "studio": _load_studio,
     "cwb": _load_cwb,
+    **WAVE_2_3_LOADERS,
 }
 
 
@@ -53,11 +55,95 @@ class Interpreter(EvaluatorMixin, ExecutorMixin):
         self.tests: List[TestDef] = []
         self.serve_config: Optional[ServeDef] = None
         self.tasks: List[Any] = []
+        self._timers: List[Any] = []
         self._imported_files: Set[str] = set()
         self._loaded_modules: Dict[str, Any] = {}
         self._loading_stack: List[str] = []
         self._current_file_dir: str = ""
         self._setup_builtins()
+
+    def _ask_impl(self, args: List[Any]) -> str:
+        """ask(prompt) or ask(model, prompt) — call AI API."""
+        if not args:
+            return "[AI not available — provide a prompt]"
+        model = "claude-sonnet-4-20250514"
+        prompt = str(args[0])
+        if len(args) >= 2:
+            model_str = str(args[0]).lower()
+            prompt = str(args[1])
+            if "gpt" in model_str or "openai" in model_str:
+                model = "gpt-4o"
+            elif "claude" in model_str:
+                model = "claude-sonnet-4-20250514"
+            elif "gemini" in model_str:
+                model = "gemini-1.5-pro"
+        api_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            return "[AI not available — set ANTHROPIC_API_KEY or OPENAI_API_KEY]"
+        try:
+            import json
+            import urllib.request
+            if "claude" in model or "anthropic" in model.lower():
+                req = urllib.request.Request(
+                    "https://api.anthropic.com/v1/messages",
+                    data=json.dumps({
+                        "model": "claude-sonnet-4-20250514",
+                        "max_tokens": 1024,
+                        "messages": [{"role": "user", "content": prompt}],
+                    }).encode(),
+                    headers={
+                        "x-api-key": api_key,
+                        "anthropic-version": "2023-06-01",
+                        "content-type": "application/json",
+                    },
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    data = json.loads(r.read().decode())
+                    for b in data.get("content", []):
+                        if b.get("type") == "text":
+                            return b.get("text", "")
+            elif "gpt" in model:
+                req = urllib.request.Request(
+                    "https://api.openai.com/v1/chat/completions",
+                    data=json.dumps({
+                        "model": "gpt-4o",
+                        "max_tokens": 1024,
+                        "messages": [{"role": "user", "content": prompt}],
+                    }).encode(),
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "content-type": "application/json",
+                    },
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    data = json.loads(r.read().decode())
+                    return data.get("choices", [{}])[0].get("message", {}).get("content", "")
+        except Exception as e:
+            return f"[AI error: {e}]"
+        return "[AI not available]"
+
+    def _agent_from_args(self, args: List[Any]) -> Any:
+        """agent(model, prompt) or agent({model, prompt}) — create agent with .run(input)."""
+        if len(args) >= 2:
+            model = str(args[0])
+            prompt = str(args[1])
+        elif args and hasattr(args[0], "_data"):
+            cfg = args[0]._data
+            model = str(cfg.get("model", "claude-sonnet"))
+            prompt = str(cfg.get("prompt", ""))
+        else:
+            return PapaMap()
+        agent_map = PapaMap([("model", model), ("prompt", prompt)])
+        _self = self
+
+        def agent_run(input_args):
+            inp = str(input_args[0]) if input_args else ""
+            return _self._ask_impl([model, f"{prompt}\n\nUser input:\n{inp}"])
+
+        agent_map.run = agent_run
+        return agent_map
 
     def _setup_builtins(self):
         """Register built-in functions."""
@@ -84,6 +170,8 @@ class Interpreter(EvaluatorMixin, ExecutorMixin):
             'assert_eq': lambda args: self._builtin_assert_eq(args),
             'assert_true': lambda args: self._builtin_assert_true(args),
             'assert_false': lambda args: self._builtin_assert_false(args),
+            'ask': lambda args: self._ask_impl(args),
+            'agent': lambda args: self._agent_from_args(args),
         }
 
     def _builtin_print(self, args):
@@ -246,6 +334,19 @@ class Interpreter(EvaluatorMixin, ExecutorMixin):
             self._loading_stack.pop()
         self._loaded_modules[full_path] = import_env
         return import_env, path
+
+    def shutdown(self) -> None:
+        """Cancel timers and cleanup (graceful shutdown)."""
+        for t in getattr(self, '_timers', []):
+            try:
+                t.cancel()
+            except Exception:
+                pass
+        self._timers.clear()
+        from .environment import PapaModel
+        if getattr(PapaModel, '_conn', None):
+            PapaModel._conn.close()
+            PapaModel._conn = None
 
     def run_tests(self) -> tuple:
         passed = 0

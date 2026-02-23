@@ -1,0 +1,10 @@
+say "=== AI Agent Demo ==="
+
+// agent(model, prompt) creates agent with .run(input) method
+CodeReviewer = agent("claude-sonnet-4-20250514", "You are a code reviewer. Give brief, constructive feedback.")
+
+code = "def add(a, b): return a + b"
+review = CodeReviewer.run(code)
+say "Review: " + review
+
+say "Done!"

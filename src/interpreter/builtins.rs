@@ -8,6 +8,8 @@ pub fn register_all(env: &mut crate::interpreter::evaluator::Environment) {
     // Core
     env.define("print", Value::Builtin("print".into()));
     env.define("type", Value::Builtin("type".into()));
+    env.define("ok", Value::Builtin("ok".into()));
+    env.define("err", Value::Builtin("err".into()));
     env.define("len", Value::Builtin("len".into()));
     env.define("uuid", Value::Builtin("uuid".into()));
 
@@ -70,6 +72,14 @@ pub fn call(name: &str, args: &[Value]) -> Result<Value, String> {
             _ => Err("len() requires string, list, or map".into()),
         },
         "uuid" => Ok(Value::Str(uuid::Uuid::new_v4().to_string())),
+        "ok" => {
+            let v = args.first().cloned().unwrap_or(Value::None);
+            Ok(Value::Ok(Box::new(v)))
+        }
+        "err" => {
+            let v = args.first().cloned().unwrap_or(Value::None);
+            Ok(Value::Err(Box::new(v)))
+        }
 
         // DB
         "db.sql" => {

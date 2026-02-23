@@ -243,26 +243,27 @@ class ExecutorMixin:
         self.tasks.append(t)
 
     def exec_EveryDef(self, node: EveryDef, env: Environment) -> None:
-        def run_every():
-            multipliers = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400}
-            interval_val = self.evaluate(node.interval, env)
-            seconds = float(interval_val) * multipliers.get(node.unit, 1)
+        multipliers = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400}
+        interval_val = self.evaluate(node.interval, env)
+        seconds = float(interval_val) * multipliers.get(node.unit, 1)
 
-            def tick():
-                while True:
-                    time.sleep(seconds)
-                    every_env = Environment(parent=env)
-                    try:
-                        for stmt in node.body:
-                            self.execute(stmt, every_env)
-                    except Exception:
-                        pass
-
-            t = threading.Thread(target=tick, daemon=True)
+        def tick():
+            try:
+                every_env = Environment(parent=env)
+                for stmt in node.body:
+                    self.execute(stmt, every_env)
+            except Exception:
+                pass
+            t = threading.Timer(seconds, tick)
+            t.daemon = True
+            if hasattr(self, '_timers'):
+                self._timers.append(t)
             t.start()
-            self.tasks.append(t)
 
-        run_every()
+        t = threading.Timer(seconds, tick)
+        t.daemon = True
+        self._timers.append(t)
+        t.start()
 
     def exec_ImportStatement(self, node: ImportStatement, env: Environment) -> None:
         import_env, _ = self._load_module(node.path)

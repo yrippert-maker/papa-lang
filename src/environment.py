@@ -2,7 +2,10 @@
 PAPA Lang Environment — Runtime types, signals, scope management.
 """
 
-from typing import Any, Dict, TYPE_CHECKING
+import json
+import os
+import sqlite3
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from .ast_nodes import FunctionDef, TypeDef, RouteDef, TestDef, ServeDef
 
@@ -199,14 +202,60 @@ class PapaModelInstance:
 
 
 class PapaModel:
-    """PAPA Lang's model — in-memory ORM."""
+    """PAPA Lang's model — in-memory ORM with optional SQLite persistence."""
     _is_papa_model = True
+    _db_path: Optional[str] = None
+    _conn: Optional[sqlite3.Connection] = None
 
     def __init__(self, name: str, fields: list, interpreter: 'Interpreter'):
         self.name = name
         self.fields = fields  # [(name, type, modifiers), ...]
-        self._store = []
+        self._store: list = []
         self._interp = interpreter
+        self._use_sqlite = False
+        db = os.environ.get("PAPA_DB", "")
+        if db:
+            PapaModel._db_path = ":memory:" if db == ":memory:" else db
+            self._use_sqlite = True
+            self._ensure_table()
+
+    @classmethod
+    def _get_conn(cls) -> Optional[sqlite3.Connection]:
+        if cls._conn is None and cls._db_path:
+            cls._conn = sqlite3.connect(cls._db_path)
+            cls._conn.row_factory = sqlite3.Row
+            cls._conn.execute("PRAGMA journal_mode=WAL")
+        return cls._conn
+
+    def _ensure_table(self) -> None:
+        conn = self._get_conn()
+        if conn:
+            conn.execute(
+                f'CREATE TABLE IF NOT EXISTS "{self.name}" '
+                '(id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, '
+                'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)'
+            )
+            conn.commit()
+
+    def _load_store(self) -> None:
+        """Load _store from SQLite."""
+        if not self._use_sqlite:
+            return
+        conn = self._get_conn()
+        if not conn:
+            return
+        try:
+            rows = conn.execute(
+                f'SELECT id, data FROM "{self.name}" ORDER BY id'
+            ).fetchall()
+            self._store = []
+            for row in rows:
+                data = json.loads(row["data"])
+                data["id"] = row["id"]
+                inst = PapaModelInstance(data, self)
+                self._store.append(inst)
+        except Exception:
+            self._store = []
 
     def create(self, **kwargs) -> PapaModelInstance:
         data = {}
@@ -221,6 +270,7 @@ class PapaModel:
         for k in kwargs:
             if k not in [f[0] for f in self.fields]:
                 raise PapaError(f"Неизвестное поле '{k}' в модели {self.name}")
+        self._load_store()
         for fname, ftype, mods in self.fields:
             if 'unique' in mods:
                 for rec in self._store:
@@ -228,20 +278,35 @@ class PapaModel:
                         raise PapaError(
                             f"Значение '{data[fname]}' уже существует для уникального поля '{fname}'"
                         )
-        inst = PapaModelInstance(data, self)
+        if self._use_sqlite:
+            conn = self._get_conn()
+            if conn:
+                cursor = conn.execute(
+                    f'INSERT INTO "{self.name}" (data) VALUES (?)',
+                    (json.dumps(data),)
+                )
+                conn.commit()
+                data["id"] = cursor.lastrowid
+        inst = PapaModelInstance(dict(data), self)
         self._store.append(inst)
         return inst
 
     def all(self) -> PapaList:
+        if self._use_sqlite:
+            self._load_store()
         return PapaList(list(self._store))
 
     def find(self, **kwargs) -> Maybe:
+        if self._use_sqlite:
+            self._load_store()
         for rec in self._store:
             if all(rec._data.get(k) == v for k, v in kwargs.items()):
                 return Maybe.some(rec)
         return Maybe.none()
 
     def where(self, condition) -> PapaList:
+        if self._use_sqlite:
+            self._load_store()
         result = []
         for rec in self._store:
             try:
@@ -255,11 +320,26 @@ class PapaModel:
         return PapaList(result)
 
     def count(self) -> int:
+        if self._use_sqlite:
+            conn = self._get_conn()
+            if conn:
+                try:
+                    row = conn.execute(f'SELECT COUNT(*) FROM "{self.name}"').fetchone()
+                    return row[0]
+                except Exception:
+                    pass
+        self._load_store()
         return len(self._store)
 
     def delete(self, rec: PapaModelInstance) -> None:
+        rec_id = rec._data.get("id")
         if rec in self._store:
             self._store.remove(rec)
+        if self._use_sqlite and rec_id is not None:
+            conn = self._get_conn()
+            if conn:
+                conn.execute(f'DELETE FROM "{self.name}" WHERE id = ?', (rec_id,))
+                conn.commit()
 
 
 class PapaMap:

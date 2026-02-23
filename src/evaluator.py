@@ -150,6 +150,9 @@ class EvaluatorMixin:
         if isinstance(func, tuple) and func[0] == 'builtin':
             return self.builtins[func[1]](args)
 
+        if callable(func):
+            return func(args)
+
         if isinstance(func, FunctionDef):
             if func.is_async:
                 def run_async():
@@ -257,6 +260,9 @@ class EvaluatorMixin:
                 return obj.get(args[0]) if args else Maybe.none()
             if method == 'set':
                 return obj.set(args[0], args[1]) if len(args) >= 2 else obj
+            # AI agent .run(input) — callable attribute
+            if hasattr(obj, method) and callable(getattr(obj, method)):
+                return getattr(obj, method)(args)
 
         if hasattr(obj, '_is_papa_model') and obj._is_papa_model:
             if method == 'create':
@@ -296,6 +302,9 @@ class EvaluatorMixin:
             return Maybe.none()
 
         if isinstance(obj, PapaMap):
+            # Python attributes (e.g. agent.run) take precedence
+            if hasattr(obj, node.member):
+                return getattr(obj, node.member)
             return obj.get(node.member)
 
         if isinstance(obj, PapaList):

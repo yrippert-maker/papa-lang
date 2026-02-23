@@ -489,43 +489,22 @@ class Lexer:
                 tokens.append(self.read_identifier())
                 continue
 
-            # Two-character operators
-            two_char = self.source[self.pos:self.pos + 2] if self.pos + 1 < len(self.source) else ""
-            if two_char == '->':
-                tokens.append(Token(TokenType.ARROW, '->', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '=>':
-                tokens.append(Token(TokenType.FAT_ARROW, '=>', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '==':
-                tokens.append(Token(TokenType.EQ, '==', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '!=':
-                tokens.append(Token(TokenType.NEQ, '!=', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '<=':
-                tokens.append(Token(TokenType.LTE, '<=', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '>=':
-                tokens.append(Token(TokenType.GTE, '>=', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '?.':
-                tokens.append(Token(TokenType.QMARK_DOT, '?.', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '??':
-                tokens.append(Token(TokenType.DOUBLE_Q, '??', self.line, self.col))
-                self.advance(); self.advance()
-                continue
-            if two_char == '..':
-                tokens.append(Token(TokenType.DOTDOT, '..', self.line, self.col))
-                self.advance(); self.advance()
+            # Two-character operators (dict lookup — faster than multiple slices)
+            next_ch = self.peek_ahead() if self.pos + 1 < len(self.source) else ''
+            TWO_CHAR_OPS = {
+                '-': {'>': (TokenType.ARROW, '->')},
+                '=': {'>': (TokenType.FAT_ARROW, '=>'), '=': (TokenType.EQ, '==')},
+                '!': {'=': (TokenType.NEQ, '!=')},
+                '<': {'=': (TokenType.LTE, '<=')},
+                '>': {'=': (TokenType.GTE, '>=')},
+                '?': {'.': (TokenType.QMARK_DOT, '?.'), '?': (TokenType.DOUBLE_Q, '??')},
+                '.': {'.': (TokenType.DOTDOT, '..')},
+            }
+            if ch in TWO_CHAR_OPS and next_ch in TWO_CHAR_OPS[ch]:
+                tok_type, tok_val = TWO_CHAR_OPS[ch][next_ch]
+                tokens.append(Token(tok_type, tok_val, self.line, self.col))
+                self.advance()
+                self.advance()
                 continue
 
             # Single-character operators

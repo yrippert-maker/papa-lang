@@ -18,8 +18,9 @@ Usage:
   papa marketplace           List MCP packages
 """
 
-import sys
 import os
+import signal
+import sys
 
 # Add parent to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +28,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.lexer import lex, LexerError
 from src.parser import parse, ParseError
 from src.interpreter import Interpreter, PapaError, FailSignal
+
+_current_interp = None
+
+
+def _on_signal(signum, frame):
+    global _current_interp
+    if _current_interp:
+        _current_interp.shutdown()
+    sys.exit(128 + (signum if signum else 0))
 
 
 def cmd_run(filename: str):
@@ -38,10 +48,15 @@ def cmd_run(filename: str):
     with open(filename, 'r') as f:
         source = f.read()
 
+    global _current_interp
+    interp = None
     try:
+        signal.signal(signal.SIGINT, _on_signal)
+        signal.signal(signal.SIGTERM, _on_signal)
         tokens = lex(source, filename)
         ast = parse(tokens, source)
         interp = Interpreter()
+        _current_interp = interp
         interp.interpret(ast, filename)
 
         # Run tests if any
@@ -57,6 +72,10 @@ def cmd_run(filename: str):
     except FailSignal as e:
         print(f"\033[93m{e}\033[0m")
         sys.exit(1)
+    finally:
+        _current_interp = None
+        if interp:
+            interp.shutdown()
 
 
 def cmd_serve(filename: str):
@@ -68,10 +87,15 @@ def cmd_serve(filename: str):
     with open(filename, 'r') as f:
         source = f.read()
 
+    global _current_interp
+    interp = None
     try:
+        signal.signal(signal.SIGINT, _on_signal)
+        signal.signal(signal.SIGTERM, _on_signal)
         tokens = lex(source, filename)
         ast = parse(tokens, source)
         interp = Interpreter()
+        _current_interp = interp
         interp.interpret(ast, filename)
 
         if not interp.serve_config:
@@ -85,6 +109,10 @@ def cmd_serve(filename: str):
     except FailSignal as e:
         print(f"\033[93m{e}\033[0m")
         sys.exit(1)
+    finally:
+        _current_interp = None
+        if interp:
+            interp.shutdown()
 
 
 def cmd_test(filename: str):
@@ -96,10 +124,15 @@ def cmd_test(filename: str):
     with open(filename, 'r') as f:
         source = f.read()
 
+    global _current_interp
+    interp = None
     try:
+        signal.signal(signal.SIGINT, _on_signal)
+        signal.signal(signal.SIGTERM, _on_signal)
         tokens = lex(source, filename)
         ast = parse(tokens, source)
         interp = Interpreter()
+        _current_interp = interp
         interp.interpret(ast, filename)
 
         if not interp.tests:
@@ -114,6 +147,10 @@ def cmd_test(filename: str):
     except (LexerError, ParseError, PapaError) as e:
         print(f"\033[91m{e}\033[0m")
         sys.exit(1)
+    finally:
+        _current_interp = None
+        if interp:
+            interp.shutdown()
 
 
 def cmd_lex(filename: str):

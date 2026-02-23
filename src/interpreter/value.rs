@@ -25,6 +25,10 @@ pub enum Value {
     Builtin(String),
     /// Object/record (legacy, prefer Map)
     Object(HashMap<String, Box<Value>>),
+    /// Result::Ok(value)
+    Ok(Box<Value>),
+    /// Result::Err(value)
+    Err(Box<Value>),
 }
 
 impl Value {
@@ -42,6 +46,20 @@ impl Value {
         }
     }
 
+    pub fn as_map(&self) -> Option<&HashMap<String, Value>> {
+        match self {
+            Value::Map(m) => Some(m),
+            _ => None,
+        }
+    }
+
+    pub fn as_list(&self) -> Option<&Vec<Value>> {
+        match self {
+            Value::List(l) => Some(l),
+            _ => None,
+        }
+    }
+
     pub fn is_truthy(&self) -> bool {
         match self {
             Value::Bool(b) => *b,
@@ -51,6 +69,7 @@ impl Value {
             Value::Str(s) => !s.is_empty(),
             Value::List(l) => !l.is_empty(),
             Value::Map(m) => !m.is_empty(),
+            Value::Err(_) => false,
             _ => true,
         }
     }
@@ -67,6 +86,22 @@ impl Value {
             Value::Object(_) => "object",
             Value::Function { .. } => "fn",
             Value::Builtin(_) => "builtin",
+            Value::Ok(_) => "ok",
+            Value::Err(_) => "err",
+        }
+    }
+
+    pub fn as_ok(&self) -> Option<&Value> {
+        match self {
+            Value::Ok(v) => Some(v),
+            _ => None,
+        }
+    }
+
+    pub fn as_err(&self) -> Option<&Value> {
+        match self {
+            Value::Err(v) => Some(v),
+            _ => None,
         }
     }
 
@@ -103,6 +138,8 @@ impl Value {
             }
             Value::Function { name, .. } => serde_json::json!({"fn": name}),
             Value::Builtin(name) => serde_json::json!({"builtin": name}),
+            Value::Ok(v) => serde_json::json!({"ok": v.to_json()}),
+            Value::Err(v) => serde_json::json!({"err": v.to_json()}),
         }
     }
 
@@ -122,6 +159,14 @@ impl Value {
                 Value::List(a.into_iter().map(Value::from_json).collect())
             }
             serde_json::Value::Object(o) => {
+                if o.len() == 1 {
+                    if let Some(v) = o.get("ok").cloned() {
+                        return Value::Ok(Box::new(Value::from_json(v)));
+                    }
+                    if let Some(v) = o.get("err").cloned() {
+                        return Value::Err(Box::new(Value::from_json(v)));
+                    }
+                }
                 let m: HashMap<String, Value> = o
                     .into_iter()
                     .map(|(k, v)| (k, Value::from_json(v)))
@@ -163,6 +208,8 @@ impl fmt::Display for Value {
             Value::Function { name, .. } => write!(f, "<fn {}>", name),
             Value::Builtin(name) => write!(f, "<builtin {}>", name),
             Value::Object(_) => write!(f, "<object>"),
+            Value::Ok(v) => write!(f, "ok({})", v),
+            Value::Err(v) => write!(f, "err({})", v),
         }
     }
 }

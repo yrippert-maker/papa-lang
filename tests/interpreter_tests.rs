@@ -47,3 +47,39 @@ print(z)
 "#);
     assert!(result.is_ok());
 }
+
+#[test]
+fn test_match() {
+    let result = run(r#"
+let x = 42
+match x {
+  0 => { print("zero") }
+  1..10 => { print("small") }
+  10..100 => { print("medium") }
+  _ => { print("large") }
+}
+"#);
+    assert!(result.is_ok(), "match failed: {:?}", result.err());
+}
+
+#[test]
+fn test_match_ok_err() {
+    let result = run(r#"
+let res = ok("hello")
+match res {
+  Ok(s) => { print(s) }
+  Err(e) => { print("error") }
+}
+"#);
+    assert!(result.is_ok(), "match Ok/Err failed: {:?}", result.err());
+}
+
+#[test]
+fn test_pipeline() {
+    let result = run(r#"
+fn double(x) { x * 2 }
+let y = 5 |> double()
+print(y)
+"#);
+    assert!(result.is_ok());
+}

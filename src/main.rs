@@ -6,7 +6,23 @@ use clap::{Parser, Subcommand};
 use papa_lang::lexer::Scanner;
 use papa_lang::parser::Parser as PlParser;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+
+fn walk_pl_files(dir: &Path) -> Vec<PathBuf> {
+    let mut out = Vec::new();
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() && path.file_name().map_or(false, |n| n != "target" && !n.to_string_lossy().starts_with('.')) {
+                out.extend(walk_pl_files(&path));
+            } else if path.extension().map_or(false, |e| e == "pl") {
+                out.push(path);
+            }
+        }
+    }
+    out.sort();
+    out
+}
 
 #[derive(Parser)]
 #[command(name = "pl")]
@@ -18,6 +34,11 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Package management
+    Pkg {
+        #[command(subcommand)]
+        cmd: PkgCommand,
+    },
     /// Run a PL file (interpret)
     Run {
         #[arg(value_name = "FILE")]
@@ -63,10 +84,36 @@ enum Commands {
     Repl,
 }
 
+#[derive(Subcommand)]
+enum PkgCommand {
+    /// Initialize a new PL package (creates papa.toml)
+    Init,
+}
+
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
+        Commands::Pkg { cmd } => match cmd {
+            PkgCommand::Init => {
+                let default_toml = r#"[package]
+name = "my-pl-package"
+version = "0.1.0"
+description = "PAPA Lang package"
+
+[dependencies]
+# Add dependencies here (future)
+"#;
+                let path = std::path::Path::new("papa.toml");
+                if path.exists() {
+                    println!("papa.toml already exists");
+                } else {
+                    fs::write(path, default_toml)
+                        .map_err(|e| anyhow::anyhow!("Failed to write papa.toml: {}", e))?;
+                    println!("Created papa.toml");
+                }
+            }
+        },
         Commands::Engines => {
             println!("PAPA Lang Runtime Engines:");
             println!("  ✅ db        — Built-in database (SQLite)");
@@ -109,11 +156,47 @@ fn main() -> anyhow::Result<()> {
         Commands::Test => {
             println!("Test not implemented yet");
         }
-        Commands::Fmt { files: _ } => {
-            println!("Fmt not implemented yet");
+        Commands::Fmt { files } => {
+            let files = if files.is_empty() {
+                vec![PathBuf::from("main.pl")]
+            } else {
+                files
+            };
+            for path in &files {
+                match fs::read_to_string(path) {
+                    Ok(source) => {
+                        match papa_lang::fmt::format_source(&source) {
+                            Ok(formatted) => {
+                                if fs::write(path, formatted).is_ok() {
+                                    println!("Formatted {}", path.display());
+                                }
+                            }
+                            Err(e) => eprintln!("{}: parse error: {}", path.display(), e),
+                        }
+                    }
+                    Err(e) => eprintln!("{}: {}", path.display(), e),
+                }
+            }
         }
         Commands::Lint => {
-            println!("Lint not implemented yet");
+            let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+            let pl_files: Vec<_> = walk_pl_files(&cwd);
+            for path in &pl_files {
+                match fs::read_to_string(path) {
+                    Ok(source) => {
+                        let mut scanner = papa_lang::lexer::Scanner::new(&source);
+                        let tokens = scanner.scan_all();
+                        let mut parser = PlParser::new(tokens);
+                        let _ = parser.parse();
+                        // TODO: run actual lint rules (unused vars, etc.)
+                        println!("Checked {}", path.display());
+                    }
+                    Err(e) => eprintln!("{}: {}", path.display(), e),
+                }
+            }
+            if pl_files.is_empty() {
+                println!("No .pl files found");
+            }
         }
         Commands::Repl => {
             println!("REPL not implemented yet");

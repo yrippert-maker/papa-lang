@@ -121,6 +121,8 @@ pub enum Expr {
         op: UnaryOp,
         expr: Box<Expr>,
     },
+    /// Try: expr? — unwraps Ok(x) to x, propagates Err(e)
+    Try(Box<Expr>),
     Call {
         callee: Box<Expr>,
         args: Vec<Expr>,
@@ -143,6 +145,18 @@ pub enum Expr {
     Map(Vec<(String, Expr)>),
     /// Array literal [ a, b, c ]
     List(Vec<Expr>),
+    /// List comprehension [expr for var in iter] or [expr for var in iter if cond]
+    ListComp {
+        item: Box<Expr>,
+        var: String,
+        iter: Box<Expr>,
+        filter: Option<Box<Expr>>,
+    },
+    /// Struct literal: TypeName { field: expr, ... }
+    StructLiteral {
+        type_name: String,
+        fields: Vec<(String, Expr)>,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -187,6 +201,7 @@ pub enum PipelineOp {
 #[derive(Debug, Clone)]
 pub struct MatchArm {
     pub pattern: Pattern,
+    pub guard: Option<Expr>,
     pub body: Vec<Stmt>,
 }
 
@@ -194,7 +209,14 @@ pub struct MatchArm {
 pub enum Pattern {
     Ident(String),
     Literal(Literal),
-    Variant(String),
+    /// Ok(x), Err(e) — variant name + optional inner pattern
+    Variant(String, Option<Box<Pattern>>),
+    /// Range: start..end (e.g. 1..10)
+    Range(Box<Expr>, Box<Expr>),
+    /// Guard: pattern if condition
+    Guard(Box<Pattern>, Box<Expr>),
+    /// Destructure map: { a, b } or { a: foo, b }
+    MapDestructure(Vec<(String, Option<Pattern>)>),
 }
 
 #[derive(Debug, Clone, PartialEq)]

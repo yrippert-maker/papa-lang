@@ -1,0 +1,9 @@
+say "=== AI-Native Demo ==="
+
+// ask(prompt) - returns AI response or fallback message
+say ask("What is the capital of France? Answer in one word.")
+
+// ask(model, prompt) - specify model
+say ask("claude", "Write a haiku about programming")
+
+say "Done!"

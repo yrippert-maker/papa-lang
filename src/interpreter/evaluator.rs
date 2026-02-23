@@ -121,6 +121,14 @@ impl Evaluator {
                 let v = self.eval_expr(expr)?;
                 self.eval_unary(op, v)
             }
+            Expr::Try(expr) => {
+                let v = self.eval_expr(expr)?;
+                match v {
+                    Value::Ok(inner) => Ok(*inner),
+                    Value::Err(inner) => Err((*inner).to_string()),
+                    _ => Err(format!("? operator requires Result, got {}", v.type_name())),
+                }
+            }
             Expr::Call { callee, args } => {
                 let f = self.eval_expr(callee)?;
                 let arg_values: Vec<Value> = args
@@ -147,11 +155,11 @@ impl Evaluator {
             Expr::Pipeline { init, steps } => {
                 let mut val = self.eval_expr(init)?;
                 for step in steps {
-                    val = self.eval_pipeline_step(val, &step.expr)?;
+                    val = self.eval_pipeline_step(val, &step.op, &step.expr)?;
                 }
                 Ok(val)
             }
-            Expr::Match { .. } => Err("match not implemented yet".into()),
+            Expr::Match { expr, arms } => self.eval_match(expr, arms),
             Expr::Map(entries) => {
                 let mut m = HashMap::new();
                 for (k, e) in entries {
@@ -166,6 +174,43 @@ impl Evaluator {
                     lst.push(self.eval_expr(e)?);
                 }
                 Ok(Value::List(lst))
+            }
+            Expr::StructLiteral {
+                type_name,
+                fields,
+            } => {
+                let mut m = HashMap::new();
+                m.insert("__type".to_string(), Value::Str(type_name.clone()));
+                for (k, e) in fields {
+                    m.insert(k.clone(), self.eval_expr(&e)?);
+                }
+                Ok(Value::Map(m))
+            }
+            Expr::ListComp {
+                item,
+                var,
+                iter,
+                filter,
+            } => {
+                let iter_val = self.eval_expr(iter)?;
+                let list = iter_val
+                    .as_list()
+                    .ok_or("List comprehension requires iterable (list)")?;
+                let mut result = Vec::new();
+                for v in list {
+                    let child_env =
+                        Rc::new(RefCell::new(Environment::with_parent(self.env.clone())));
+                    child_env.borrow_mut().define(var, v.clone());
+                    let mut inner = Evaluator::with_env(child_env);
+                    if let Some(ref cond) = filter {
+                        let c = inner.eval_expr(cond)?;
+                        if !c.is_truthy() {
+                            continue;
+                        }
+                    }
+                    result.push(inner.eval_expr(item)?);
+                }
+                Ok(Value::List(result))
             }
         }
     }
@@ -248,6 +293,97 @@ impl Evaluator {
         }
     }
 
+    fn eval_match(&mut self, expr: &Expr, arms: &[MatchArm]) -> Result<Value, String> {
+        let value = self.eval_expr(expr)?;
+        for arm in arms {
+            if let Some(bindings) = self.pattern_matches(&arm.pattern, &value)? {
+                let child_env = Rc::new(RefCell::new(Environment::with_parent(self.env.clone())));
+                for (name, val) in &bindings {
+                    child_env.borrow_mut().define(name, val.clone());
+                }
+                if let Some(ref guard) = arm.guard {
+                    let mut guard_eval = Evaluator::with_env(child_env.clone());
+                    let cond = guard_eval.eval_expr(guard)?;
+                    if !cond.is_truthy() {
+                        continue;
+                    }
+                }
+                let mut inner = Evaluator::with_env(child_env);
+                return inner.eval_block(&arm.body);
+            }
+        }
+        Err(format!("Non-exhaustive match: no arm matched value {}", value))
+    }
+
+    fn pattern_matches(
+        &mut self,
+        pattern: &Pattern,
+        value: &Value,
+    ) -> Result<Option<Vec<(String, Value)>>, String> {
+        use crate::parser::ast::Pattern;
+        match pattern {
+            Pattern::Ident(name) => {
+                if name == "_" {
+                    Ok(Some(vec![]))
+                } else {
+                    Ok(Some(vec![(name.clone(), value.clone())]))
+                }
+            }
+            Pattern::Literal(lit) => {
+                let lit_val = self.literal_to_value(lit);
+                Ok(value_eq(&lit_val, value).then_some(vec![]))
+            }
+            Pattern::Variant(vname, None) => match (vname.as_str(), value) {
+                ("Ok", Value::Ok(_)) | ("Err", Value::Err(_)) => Ok(Some(vec![])),
+                _ => Ok(None),
+            },
+            Pattern::Variant(vname, Some(inner)) => match (vname.as_str(), value) {
+                ("Ok", Value::Ok(v)) => self.pattern_matches(inner, v),
+                ("Err", Value::Err(v)) => self.pattern_matches(inner, v),
+                _ => Ok(None),
+            },
+            Pattern::Range(start_expr, end_expr) => {
+                let v = value.as_int().ok_or("Range pattern requires int value")?;
+                let lo = self.eval_expr(start_expr)?.as_int().ok_or("Range start must be int")?;
+                let hi = self.eval_expr(end_expr)?.as_int().ok_or("Range end must be int")?;
+                Ok((v >= lo && v < hi).then_some(vec![]))
+            }
+            Pattern::Guard(pat, cond) => {
+                if let Some(bindings) = self.pattern_matches(pat, value)? {
+                    let child_env = Rc::new(RefCell::new(Environment::with_parent(self.env.clone())));
+                    for (name, val) in &bindings {
+                        child_env.borrow_mut().define(name, val.clone());
+                    }
+                    let mut inner = Evaluator::with_env(child_env);
+                    let c = inner.eval_expr(cond)?;
+                    Ok(c.is_truthy().then_some(bindings))
+                } else {
+                    Ok(None)
+                }
+            }
+            Pattern::MapDestructure(fields) => {
+                let m = value.as_map().ok_or("Map destructure requires map value")?;
+                let mut bindings = Vec::new();
+                for (key, subpat) in fields {
+                    let val = m.get(key)
+                        .cloned()
+                        .ok_or_else(|| format!("Map destructure: key '{}' not found", key))?;
+                    match subpat {
+                        Some(sp) => {
+                            if let Some(b) = self.pattern_matches(sp, &val)? {
+                                bindings.extend(b);
+                            } else {
+                                return Ok(None);
+                            }
+                        }
+                        None => bindings.push((key.clone(), val)),
+                    }
+                }
+                Ok(Some(bindings))
+            }
+        }
+    }
+
     fn eval_block(&mut self, stmts: &[Stmt]) -> Result<Value, String> {
         let mut last = Value::None;
         for s in stmts {
@@ -290,7 +426,33 @@ impl Evaluator {
         Ok(Value::None)
     }
 
-    fn eval_pipeline_step(&mut self, input: Value, expr: &Expr) -> Result<Value, String> {
+    fn eval_pipeline_step(
+        &mut self,
+        input: Value,
+        op: &crate::parser::ast::PipelineOp,
+        expr: &Expr,
+    ) -> Result<Value, String> {
+        use crate::parser::ast::PipelineOp;
+        match op {
+            PipelineOp::Then => self.eval_pipeline_call(input, expr),
+            PipelineOp::Ok => {
+                if let Value::Ok(v) = input {
+                    self.eval_pipeline_call(*v, expr)
+                } else {
+                    Ok(input)
+                }
+            }
+            PipelineOp::Err => {
+                if let Value::Err(v) = input {
+                    self.eval_pipeline_call(*v, expr)
+                } else {
+                    Ok(input)
+                }
+            }
+        }
+    }
+
+    fn eval_pipeline_call(&mut self, input: Value, expr: &Expr) -> Result<Value, String> {
         match expr {
             Expr::Call { callee, args } => {
                 let f = self.eval_expr(callee)?;
@@ -340,6 +502,8 @@ fn value_eq(a: &Value, b: &Value) -> bool {
         (Value::Map(x), Value::Map(y)) => {
             x.len() == y.len() && x.iter().all(|(k, v)| y.get(k).map_or(false, |v2| value_eq(v, v2)))
         }
+        (Value::Ok(a), Value::Ok(b)) => value_eq(a, b),
+        (Value::Err(a), Value::Err(b)) => value_eq(a, b),
         _ => false,
     }
 }
