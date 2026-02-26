@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>papa-lang — Declarative AI Safety Language</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    :root { --bg: #0A0A0F; --primary: #2563EB; --card-bg: #14141F; --text: #E2E8F0; --muted: #94A3B8; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    
+    /* Hero */
+    .hero { padding: 4rem 0 3rem; text-align: center; }
+    .hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.25rem; color: var(--muted); margin-bottom: 2rem; }
+    .hero .code-block { background: var(--card-bg); border-radius: 8px; padding: 1.25rem; text-align: left; max-width: 480px; margin: 0 auto 1.5rem; }
+    .hero .code-block pre { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+    .hero .btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero a.btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+    .hero a.btn-primary { background: var(--primary); color: white; }
+    .hero a.btn-outline { border: 2px solid var(--primary); color: var(--primary); }
+    .hero a.btn:hover { opacity: 0.9; }
+    
+    /* Install */
+    .install { padding: 3rem 0; }
+    .install h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    .install-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .install-card { background: var(--card-bg); border-radius: 8px; padding: 1.5rem; }
+    .install-card h3 { font-size: 1rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .install-card code { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--muted); }
+    
+    /* Why */
+    .why { padding: 3rem 0; }
+    .why h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .why-card { background: var(--card-bg); border-radius: 8px; padding: 1.5rem; }
+    .why-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .why-card h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .why-card p { font-size: 0.9rem; color: var(--muted); }
+    
+    /* Example */
+    .example { padding: 3rem 0; }
+    .example h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 768px) { .example-grid { grid-template-columns: 1fr; } }
+    .example-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; }
+    .example-card h3 { font-size: 0.9rem; padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; }
+    .example-card pre { margin: 0; padding: 1rem; font-size: 0.75rem; overflow-x: auto; }
+    .example-card code { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Links */
+    .links { padding: 3rem 0 4rem; text-align: center; }
+    .links h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+    .links a { color: var(--primary); margin: 0 0.5rem; text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>papa-lang</h1>
+      <p>Declarative AI Safety Language</p>
+      <div class="code-block">
+        <pre><code class="language-yaml">agent assistant {
+  model: claude-3-sonnet
+  guard: standard
+  hrs_threshold: 0.15
+}
+
+pipeline main {
+  route: single
+  fallback: single
+}</code></pre>
+      </div>
+      <div class="btns">
+        <a href="https://pypi.org/project/papa-lang/" class="btn btn-primary">pip install papa-lang</a>
+        <a href="https://git.papa-ai.ae/papa/papa-lang" class="btn btn-outline">View Repository</a>
+      </div>
+    </section>
+
+    <section class="install">
+      <h2>Install</h2>
+      <div class="install-grid">
+        <div class="install-card">
+          <h3>Python</h3>
+          <code>pip install papa-lang</code>
+        </div>
+        <div class="install-card">
+          <h3>TypeScript</h3>
+          <code>npm install @papa-lang/core</code>
+        </div>
+        <div class="install-card">
+          <h3>CLI</h3>
+          <code>papa compile agent.papa</code>
+        </div>
+      </div>
+    </section>
+
+    <section class="why">
+      <h2>Why papa-lang</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="icon">🛡️</div>
+          <h3>Safety First</h3>
+          <p>Declare HRS thresholds before deployment</p>
+        </div>
+        <div class="why-card">
+          <div class="icon">🔄</div>
+          <h3>Compile Anywhere</h3>
+          <p>Python, TypeScript, more coming</p>
+        </div>
+        <div class="why-card">
+          <div class="icon">📋</div>
+          <h3>Open Standard</h3>
+          <p>RFC process, community governed</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="example">
+      <h2>Live Example</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h3>medical_analysis.papa</h3>
+          <pre><code class="language-yaml">agent synthesis {
+  model: gemini-1.5-pro
+  guard: strict
+  hrs_threshold: 0.10
+  memory: enabled
+}
+
+agent research {
+  model: claude-3-sonnet
+  guard: standard
+  hrs_threshold: 0.10
+}
+
+swarm medical_team {
+  agents: [synthesis, research]
+  consensus: 4/7
+  anchor: blockchain
+  pii: filter
+  hrs_max: 0.15
+}
+
+pipeline main {
+  route: orchestrator
+  fallback: single
+  module: papa-life
+}</code></pre>
+        </div>
+        <div class="example-card">
+          <h3>Compiled Python</h3>
+          <pre><code class="language-python">from papa_lang.orchestrator import Orchestrator
+from papa_lang.swarm import SwarmRunner, SwarmAgent
+from papa_lang.hrs import HRSConfig
+from papa_guard import Guard
+
+synthesis = SwarmAgent(
+    name='synthesis',
+    model='gemini-1.5-pro',
+    guard=Guard(pii_enabled=True),
+    hrs_config=HRSConfig(threshold=0.1),
+    memory_enabled=True,
+)
+
+medical_team = SwarmRunner(
+    name='medical_team',
+    agents=[synthesis, research],
+    consensus=ConsensusConfig(required=4, of=7),
+    anchor='blockchain',
+    pii_filter=True,
+    hrs_max=0.15,
+)
+
+orchestrator = Orchestrator(
+    route='orchestrator',
+    fallback='single',
+    module='papa-life',
+)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="links">
+      <h2>Links</h2>
+      <a href="https://git.papa-ai.ae/papa/papa-lang/-/blob/main/SPEC.md">SPEC</a>
+      <a href="https://git.papa-ai.ae/papa/papa-lang/-/blob/main/docs/rfc/RFC-0001-papa-lang-specification.md">RFC-0001</a>
+      <a href="https://pypi.org/project/papa-lang/">PyPI</a>
+      <a href="https://www.npmjs.com/package/@papa-lang/core">npm</a>
+      <a href="https://git.papa-ai.ae/papa/papa-lang">Repository</a>
+    </section>
+  </div>
+  <script>
+    document.querySelectorAll('pre code').forEach(el => {
+      hljs.highlightElement(el);
+    });
+  </script>
+</body>
+</html>
