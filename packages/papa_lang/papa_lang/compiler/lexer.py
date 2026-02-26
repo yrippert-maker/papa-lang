@@ -68,6 +68,8 @@ class Lexer:
                 self._advance()
             elif ch == "/" and self._peek_2() == "/":
                 self._skip_comment()
+            elif ch == "#":
+                self._skip_comment()
             else:
                 break
 

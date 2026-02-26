@@ -51,7 +51,7 @@ def cmd_validate(args: argparse.Namespace) -> None:
 
 def cmd_init(args: argparse.Namespace) -> None:
     name = args.name
-    template = f"""# {name}.papa
+    template = f"""// {name}.papa
 agent main {{
   model: claude-3-sonnet
   guard: standard
