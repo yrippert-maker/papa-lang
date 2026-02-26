@@ -83,7 +83,14 @@ agent_prop    = 'model' ':' ( STRING | IDENT )
               | 'guard' ':' guard_level
               | 'hrs_threshold' ':' FLOAT
               | 'memory' ':' bool_lit
+              | 'retrieval' ':' retrieval_mode
+              | 'hrs_engine' ':' hrs_engine
+              | 'observability' ':' obs_mode
               ;
+
+retrieval_mode = 'default' | 'graph' | 'vector' | 'hybrid' ;
+hrs_engine     = 'default' | 'metaqa' | 'clap' ;
+obs_mode       = 'none' | 'console' | 'otel' ;
 
 guard_level   = 'strict' | 'standard' | 'minimal' ;
 
@@ -100,13 +107,14 @@ agent_list    = IDENT { ',' IDENT } ;
 
 anchor_type   = 'blockchain' | 'hash' | 'none' ;
 
-pii_mode      = 'filter' | 'mask' | 'none' ;
+pii_mode      = 'filter' | 'mask' | 'none' | 'presidio' ;
 
 pipeline_def  = 'pipeline' IDENT '{' { pipeline_prop } '}' ;
 
 pipeline_prop = 'route' ':' route_type
               | 'fallback' ':' route_type
               | 'module' ':' ( STRING | IDENT )
+              | 'observability' ':' obs_mode
               ;
 
 route_type    = 'orchestrator' | 'single' | 'swarm' ;

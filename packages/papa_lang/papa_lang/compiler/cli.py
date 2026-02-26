@@ -9,6 +9,22 @@ from .parser import Parser, ParseError
 from .validator import Validator, ValidationError
 from .codegen.python_gen import PythonGenerator
 from .codegen.ts_gen import TypeScriptGenerator
+from .codegen.crewai_gen import generate_crewai
+from .codegen.dotnet_gen import generate_dotnet
+
+
+TARGETS = {
+    "python": (PythonGenerator().generate, "_compiled.py"),
+    "typescript": (TypeScriptGenerator().generate, "_compiled.ts"),
+    "crewai": (
+        lambda p, source_file="": generate_crewai(p, source_file),
+        "_crew.py",
+    ),
+    "dotnet": (
+        lambda p, source_file="": generate_dotnet(p, source_file),
+        ".g.cs",
+    ),
+}
 
 
 def cmd_compile(args: argparse.Namespace) -> None:
@@ -20,18 +36,40 @@ def cmd_compile(args: argparse.Namespace) -> None:
         warnings = Validator().validate(program)
         for w in warnings:
             print(f"⚠️ {w}")
-        if args.target == "python":
-            out = PythonGenerator().generate(program, source_file=src_path.name)
-            ext = ".py"
-        else:
-            out = TypeScriptGenerator().generate(program, source_file=src_path.name)
-            ext = ".ts"
-        out_file = src_path.stem + "_compiled" + ext
+        target = getattr(args, "target", "python")
+        gen_fn, ext_suffix = TARGETS.get(target, TARGETS["python"])
+        out = gen_fn(program, source_file=src_path.name)
+        out_file = src_path.stem + ext_suffix
         pathlib.Path(out_file).write_text(out)
         print(f"✅ Compiled: {out_file}")
+
+        if getattr(args, "kya", False):
+            from papa_lang.kya import generate_kya, export_kya
+            for agent in program.agents:
+                kya_data = generate_kya(
+                    agent, source, issued_by=getattr(args, "issued_by", "Unknown")
+                )
+                kya_path = export_kya(kya_data, src_path.with_name(agent.name))
+                print(f"KYA artifact: {kya_path}")
     except (LexError, ParseError, ValidationError) as e:
         print(f"❌ {e}", file=sys.stderr)
         sys.exit(1)
+
+
+def cmd_verify_kya(args: argparse.Namespace) -> None:
+    from papa_lang.kya import verify_kya
+
+    kya_file = pathlib.Path(args.kya_file)
+    source_file = pathlib.Path(args.source_file)
+    if not kya_file.exists():
+        print(f"❌ KYA file not found: {kya_file}", file=sys.stderr)
+        sys.exit(1)
+    if not source_file.exists():
+        print(f"❌ Source file not found: {source_file}", file=sys.stderr)
+        sys.exit(1)
+    ok = verify_kya(kya_file, source_file)
+    print(f"KYA verification: {'PASS' if ok else 'FAIL'}")
+    sys.exit(0 if ok else 1)
 
 
 def cmd_validate(args: argparse.Namespace) -> None:
@@ -51,7 +89,7 @@ def cmd_validate(args: argparse.Namespace) -> None:
 
 def cmd_init(args: argparse.Namespace) -> None:
     name = args.name
-    template = f"""// {name}.papa
+    template = f"""# {name}.papa
 agent main {{
   model: claude-3-sonnet
   guard: standard
@@ -72,8 +110,18 @@ def main() -> None:
     sub = parser.add_subparsers()
     c = sub.add_parser("compile")
     c.add_argument("file")
-    c.add_argument("--target", choices=["python", "typescript"], default="python")
+    c.add_argument(
+        "--target",
+        choices=["python", "typescript", "crewai", "dotnet"],
+        default="python",
+    )
+    c.add_argument("--kya", action="store_true", help="Also generate KYA artifact")
+    c.add_argument("--issued-by", default="Unknown", help="KYA issuer (with --kya)")
     c.set_defaults(func=cmd_compile)
+    vk = sub.add_parser("verify-kya")
+    vk.add_argument("kya_file")
+    vk.add_argument("source_file")
+    vk.set_defaults(func=cmd_verify_kya)
     v = sub.add_parser("validate")
     v.add_argument("file")
     v.set_defaults(func=cmd_validate)

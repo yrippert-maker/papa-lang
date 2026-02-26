@@ -1,0 +1,12 @@
+// @papa-lang v0.4
+// MetaQA HRS Engine — ACM 2025
+
+agent medical_analyst {
+  model: claude-3-sonnet
+  guard: strict
+  hrs_threshold: 0.08
+  hrs_engine: metaqa
+  memory: enabled
+  retrieval: graph
+  observability: otel
+}

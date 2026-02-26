@@ -37,6 +37,11 @@ class Validator:
                 raise ValidationError(
                     f"Line {agent.line}: hrs_threshold must be 0.0-1.0"
                 )
+            if agent.retrieval == "graph" and not agent.memory:
+                raise ValidationError(
+                    f"Line {agent.line}: Agent {agent.name!r} retrieval: graph "
+                    "requires memory: enabled"
+                )
 
         for swarm in program.swarms:
             if swarm.consensus:

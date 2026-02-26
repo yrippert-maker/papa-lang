@@ -1,0 +1,12 @@
+// @papa-lang v0.3
+// Graph-RAG — knowledge graph retrieval
+
+agent medical_analyst {
+  model: claude-3-sonnet
+  guard: strict
+  hrs_threshold: 0.08
+  memory: enabled
+  retrieval: graph
+}
+
+pipeline diagnosis { route: single module: papa-life }

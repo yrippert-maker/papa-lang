@@ -74,6 +74,9 @@ class Parser:
         guard = "standard"
         hrs_threshold = 0.15
         memory = False
+        retrieval = "default"
+        hrs_engine = "default"
+        observability = "none"
 
         while self._peek().type != RBRACE:
             if self._peek().type != IDENT and self._peek().type != KEYWORD:
@@ -94,6 +97,21 @@ class Parser:
             elif prop == "memory":
                 v = str(self._expect(IDENT).value).lower()
                 memory = v == "enabled"
+            elif prop == "retrieval":
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("default", "graph", "vector", "hybrid"):
+                    raise ParseError(f"Unknown retrieval mode: {v}", self._peek().line)
+                retrieval = v
+            elif prop == "hrs_engine":
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("default", "metaqa", "clap"):
+                    raise ParseError(f"Unknown hrs_engine: {v}", self._peek().line)
+                hrs_engine = v
+            elif prop == "observability":
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("none", "console", "otel"):
+                    raise ParseError(f"Unknown observability: {v}", self._peek().line)
+                observability = v
             else:
                 self._advance()
 
@@ -104,6 +122,9 @@ class Parser:
             guard=guard,
             hrs_threshold=hrs_threshold,
             memory=memory,
+            retrieval=retrieval,
+            hrs_engine=hrs_engine,
+            observability=observability,
             line=line,
         )
 
@@ -139,9 +160,15 @@ class Parser:
                 req, of_val = f.value
                 consensus = ConsensusConfig(required=req, of=of_val)
             elif prop == "anchor":
-                anchor = str(self._expect(IDENT).value).lower()
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("none", "blockchain", "hash"):
+                    raise ParseError(f"Unknown anchor: {v}", self._peek().line)
+                anchor = v
             elif prop == "pii":
-                pii = str(self._expect(IDENT).value).lower()
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("none", "filter", "mask", "presidio"):
+                    raise ParseError(f"Unknown pii mode: {v}", self._peek().line)
+                pii = v
             elif prop == "hrs_max":
                 n = self._expect(NUMBER)
                 hrs_max = float(n.value) if isinstance(n.value, float) else int(n.value)
@@ -170,6 +197,7 @@ class Parser:
         route = "orchestrator"
         fallback = "single"
         module = ""
+        observability = "none"
 
         while self._peek().type != RBRACE:
             if self._peek().type not in (IDENT, KEYWORD):
@@ -187,8 +215,16 @@ class Parser:
                     module = str(self._advance().value)
                 else:
                     module = str(self._expect(IDENT).value)
+            elif prop == "observability":
+                v = str(self._expect(IDENT).value).lower()
+                if v not in ("none", "console", "otel"):
+                    raise ParseError(f"Unknown observability: {v}", self._peek().line)
+                observability = v
             else:
                 self._advance()
 
         self._expect(RBRACE)
-        return PipelineDef(name=name, route=route, fallback=fallback, module=module, line=line)
+        return PipelineDef(
+            name=name, route=route, fallback=fallback, module=module,
+            observability=observability, line=line,
+        )

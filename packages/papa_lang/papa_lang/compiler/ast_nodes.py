@@ -11,6 +11,9 @@ class AgentDef:
     guard: str = "standard"  # strict | standard | minimal
     hrs_threshold: float = 0.15
     memory: bool = False
+    retrieval: str = "default"  # default | graph | vector | hybrid
+    hrs_engine: str = "default"  # default | metaqa | clap
+    observability: str = "none"  # none | console | otel
     line: int = 0
 
 
@@ -26,7 +29,7 @@ class SwarmDef:
     agents: List[str] = field(default_factory=list)
     consensus: Optional[ConsensusConfig] = None
     anchor: str = "none"
-    pii: str = "none"
+    pii: str = "none"  # none | filter | mask | presidio
     hrs_max: float = 0.30
     line: int = 0
 
@@ -37,6 +40,7 @@ class PipelineDef:
     route: str = "orchestrator"
     fallback: str = "single"
     module: str = ""
+    observability: str = "none"  # none | console | otel
     line: int = 0
 
 

@@ -1,0 +1,17 @@
+// @papa-lang v0.4
+// OpenTelemetry observability
+
+agent analyst {
+  model: claude-3-sonnet
+  guard: strict
+  hrs_threshold: 0.10
+  memory: enabled
+  retrieval: graph
+  observability: otel
+}
+
+pipeline production {
+  route: orchestrator
+  module: papa-finance
+  observability: otel
+}

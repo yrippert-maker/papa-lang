@@ -1,7 +1,7 @@
 """Swarm agents and consensus config for papa-lang compiler output."""
 
 from dataclasses import dataclass
-from typing import List, Optional, Any
+from typing import Any, List, Optional
 
 
 @dataclass
@@ -19,6 +19,7 @@ class SwarmAgent:
     guard: Any = None
     hrs_config: Any = None
     memory_enabled: bool = False
+    retriever: Optional[Any] = None
 
 
 @dataclass

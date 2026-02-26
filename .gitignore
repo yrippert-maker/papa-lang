@@ -7,6 +7,9 @@ node_modules/
 # Compiler output
 *_compiled.py
 *_compiled.ts
+*_crew.py
+*.g.cs
+*.kya.json
 
 # ═══ Python ═══
 __pycache__/
