@@ -1,6 +1,9 @@
 # ═══ Node ═══
 node_modules/
 
+# Publish tokens (never commit)
+.env.publish
+
 # ═══ Python ═══
 __pycache__/
 *.pyc
