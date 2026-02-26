@@ -12,9 +12,16 @@ class Orchestrator:
         self,
         base_url: str = "http://localhost:8000",
         api_key: Optional[str] = None,
+        *,
+        route: str = "orchestrator",
+        fallback: str = "single",
+        module: str = "",
     ):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
+        self.route = route
+        self.fallback = fallback
+        self.module = module
 
     async def orchestrate(
         self,

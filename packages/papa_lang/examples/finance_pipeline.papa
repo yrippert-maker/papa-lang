@@ -1,0 +1,16 @@
+agent analyst {
+  model: gemini-1.5-pro
+  guard: strict
+  hrs_threshold: 0.10
+}
+
+swarm finance_team {
+  agents: [analyst]
+  pii: filter
+  hrs_max: 0.20
+}
+
+pipeline main {
+  route: orchestrator
+  module: papa-finance
+}

@@ -1,0 +1,26 @@
+agent synthesis {
+  model: gemini-1.5-pro
+  guard: strict
+  hrs_threshold: 0.10
+  memory: enabled
+}
+
+agent research {
+  model: claude-3-sonnet
+  guard: standard
+  hrs_threshold: 0.10
+}
+
+swarm medical_team {
+  agents: [synthesis, research]
+  consensus: 4/7
+  anchor: blockchain
+  pii: filter
+  hrs_max: 0.15
+}
+
+pipeline main {
+  route: orchestrator
+  fallback: single
+  module: papa-life
+}

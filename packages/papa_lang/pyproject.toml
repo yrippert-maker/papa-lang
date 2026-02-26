@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "papa-lang"
-version = "0.1.0"
+version = "0.2.0"
 description = "The AI-native language: swarm agents + HRS anti-hallucination"
 readme = "README.md"
 license = {text = "MIT"}
@@ -24,6 +24,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
 ]
+
+[project.scripts]
+papa = "papa_lang.compiler.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/papa-ecosystem/papa-lang"

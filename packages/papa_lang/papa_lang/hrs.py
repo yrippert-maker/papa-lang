@@ -1,9 +1,17 @@
 """HRS (Hallucination Risk Score) monitor interface."""
 
+from dataclasses import dataclass
 from typing import Literal
 from .types import HRSVerdict
 
 Verdict = Literal["PASS", "WARN", "BLOCK"]
+
+
+@dataclass
+class HRSConfig:
+    """HRS threshold config for agent/swarm. Used by compiler-generated code."""
+
+    threshold: float = 0.15
 
 
 class HRSMonitor:

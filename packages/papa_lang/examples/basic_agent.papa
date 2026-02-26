@@ -1,0 +1,10 @@
+agent assistant {
+  model: claude-3-sonnet
+  guard: standard
+  hrs_threshold: 0.15
+}
+
+pipeline main {
+  route: single
+  fallback: single
+}

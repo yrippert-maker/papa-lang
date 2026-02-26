@@ -1,5 +1,22 @@
 /** Swarm agent types */
 
+export interface AgentConfig {
+  name: string;
+  model: string;
+  guard: string;
+  hrsThreshold: number;
+  memoryEnabled?: boolean;
+}
+
+export interface SwarmConfig {
+  name: string;
+  agents: AgentConfig[];
+  consensus?: { required: number; of: number };
+  anchor?: string;
+  piiFilter?: boolean;
+  hrsMax?: number;
+}
+
 export interface AgentResult {
   agent: string;
   response: string;

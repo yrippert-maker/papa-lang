@@ -1,5 +1,5 @@
 export type { Verdict, HRSScore, OrchestrateMode } from "./hrs";
-export type { SwarmResult, AgentResult } from "./swarm";
+export type { SwarmConfig, AgentConfig, SwarmResult, AgentResult } from "./swarm";
 export type { GuardResult, PIIMatch, InjectionSignal } from "./guard";
 
 export interface OrchestrateResult {

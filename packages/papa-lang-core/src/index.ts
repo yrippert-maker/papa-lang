@@ -7,6 +7,8 @@ export type {
   HRSScore,
   OrchestrateMode,
   OrchestrateResult,
+  SwarmConfig,
+  AgentConfig,
   SwarmResult,
   AgentResult,
   GuardResult,
