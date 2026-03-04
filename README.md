@@ -1,3 +1,14 @@
+![Version](https://img.shields.io/badge/version-0.8.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.10+-yellow)
+![Rust](https://img.shields.io/badge/rust-backend-orange)
+![Stars](https://img.shields.io/github/stars/yrippert-maker/papa-lang?style=social)
+
+> **A next-generation programming language** — eliminates null, auto-redacts secrets, immutable by default, 25 stdlib modules including AI, blockchain audit, and voice programming.
+
+[![Try PAPA Lang](https://img.shields.io/badge/Try_it-REPL-ff6600)](https://github.com/yrippert-maker/papa-lang#быстрый-старт)
+[![Docs](https://img.shields.io/badge/Docs-SPEC.md-blue)](https://github.com/yrippert-maker/papa-lang/blob/main/SPEC.md)
+
 # 🛡️ PAPA Lang v0.8.0
 
 **Язык программирования нового поколения** — построен на анализе 10 ведущих языков, устраняет целые категории багов by design.
