@@ -1,0 +1,142 @@
+// PAPA Ecosystem — Production Deploy Configuration
+// File: papa-deploy.papa
+// Usage: papa deploy prod
+
+ecosystem "papa-ai" {
+  version: "2.0.0"
+  safety_level: B  // Essential — checksum, rolling, auto-rollback
+
+  server "prod" {
+    host: "64.227.146.129"
+    user: "root"
+    port: 22
+    path: "/opt/papa-ecosystem"
+  }
+
+  sync {
+    from: local("./")
+    to: server("prod")
+    exclude: [
+      node_modules,
+      .next,
+      .git,
+      .venv,
+      .env,
+      .env.local,
+      .env.production,
+      __pycache__,
+      "*.pyc",
+      .DS_Store,
+      coverage,
+      .turbo,
+    ]
+    method: delta
+    verify: checksum
+    compress: true
+    timeout: 120s
+  }
+
+  build {
+    engine: docker
+    image: "papa-ecosystem-frontend:latest"
+    file: "Dockerfile"
+    context: "."
+    args: {
+      NEXTAUTH_SECRET: env("NEXTAUTH_SECRET") ?? "build"
+      DATABASE_URL: env("DATABASE_URL") ?? "postgresql://b:b@l:5432/b"
+    }
+    cache: false
+    requires_ram: 2GB
+    timeout: 600s
+
+    // Контейнеры которые стопаем для освобождения RAM при билде
+    stop_for_ram: [
+      "papa-ecosystem-new-litellm-1",
+      "papa-terminal",
+      "papa-devops-unified-frontend-1",
+      "papa-devops-unified-backend-1",
+      "papa-lang-site",
+      "papa-act-runner",
+      "papa-devops-unified-papa-lang-site-1",
+    ]
+  }
+
+  deploy {
+    containers: [
+      {
+        name: "papa-frontend-prod"
+        image: build.image
+        port: 3000
+        network: "papa-ecosystem_papa-network"
+        env_file: "/opt/papa-ecosystem/.env"
+        env: { NODE_ENV: "production" }
+        restart: "unless-stopped"
+        healthcheck: "/api/health"
+        healthcheck_timeout: 60s
+      },
+      {
+        name: "papa-ecosystem-prod"
+        image: build.image
+        port: 3010 -> 3000  // host 3010 → container 3000
+        network: "papa-ecosystem_papa-network"
+        env_file: "/opt/papa-ecosystem/.env"
+        env: { NODE_ENV: "production" }
+        restart: "unless-stopped"
+      },
+    ]
+
+    strategy: recreate  // стоп → удалить → создать → запустить
+
+    // Запустить после деплоя основных контейнеров
+    start_after: [
+      "papa-api-prod",
+      "papa-redis-prod",
+      "papa-n8n-prod",
+      "papa-devops-unified-postgres-1",
+      "papa-devops-unified-gitea-1",
+      "papa-devops-unified-redis-1",
+      "papa-devops-unified-frontend-1",
+      "papa-devops-unified-backend-1",
+      "papa-ecosystem-new-litellm-1",
+      "papa-terminal",
+      "papa-lang-site",
+      "papa-act-runner",
+      "papa-devops-unified-papa-lang-site-1",
+      "portainer",
+    ]
+
+    prune_images: true
+  }
+
+  verify {
+    endpoints: [
+      { url: "/api/health",              expect: 200 },
+      { url: "/api/orchestrator/status",  expect: 200 },
+      { url: "/api/swarm",               expect: 401 },
+      { url: "/api/agents",              expect: 401 },
+      { url: "/api/alerts",              expect: 401 },
+    ]
+    timeout: 30s
+    retries: 3
+    interval: 10s
+  }
+
+  hooks {
+    pre_sync:    shell("echo '🔄 Syncing files...'")
+    pre_build:   shell("echo '🔨 Building image...'")
+    post_build:  shell("docker image prune -f")
+    post_deploy: shell("echo '🚀 Deploy complete!'")
+  }
+
+  notify {
+    on_success: cwb("#devops", "✅ PAPA v${version} deployed in ${duration} — ${containers_count} containers")
+    on_failure: cwb("#devops", "🔴 PAPA deploy FAILED at ${failed_step}: ${error}")
+    on_rollback: cwb("#devops", "⚠️ PAPA rolled back to ${previous_image}")
+  }
+
+  rollback {
+    strategy: auto
+    keep_versions: 3
+    trigger: healthcheck_fail
+  }
+}

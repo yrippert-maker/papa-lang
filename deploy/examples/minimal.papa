@@ -1,0 +1,30 @@
+// Minimal PAPA Deploy example
+ecosystem "my-app" {
+  safety_level: D
+
+  server "dev" {
+    host: "localhost"
+    user: "deploy"
+    path: "/opt/app"
+  }
+
+  sync {
+    from: local("./")
+    to: server("dev")
+    exclude: [node_modules, .git]
+    method: delta
+  }
+
+  build {
+    engine: docker
+    image: "my-app:latest"
+    cache: true
+  }
+
+  deploy {
+    containers: [
+      { name: "my-app", port: 3000 }
+    ]
+    strategy: recreate
+  }
+}
