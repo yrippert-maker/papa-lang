@@ -1,0 +1,6 @@
+#!/bin/bash
+# PAPA Deploy CLI — wrapper script
+# Install: sudo ln -sf $(pwd)/papa-deploy /usr/local/bin/papa-deploy
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 "$SCRIPT_DIR/src/papa_deploy.py" "$@"
