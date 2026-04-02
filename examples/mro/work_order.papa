@@ -1,0 +1,8 @@
+say "=== MRO Work Order ==="
+model WorkOrder
+  engine_sn: text
+  work_type: text
+  status: text
+order = WorkOrder.create(engine_sn: "TV3-117VMA-7901234", work_type: "Hot Section Inspection", status: "in_progress")
+say "Engine: {order.engine_sn}"
+say "Work: {order.work_type}"

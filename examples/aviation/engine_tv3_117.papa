@@ -1,0 +1,13 @@
+say "=== PAPA Engine Design Suite ==="
+power = 2500
+pr = 9.4
+tit = 1100
+eta_c = 0.86
+t0 = 288.15
+p0 = 101.325
+t2_ideal = t0 * (pr ** 0.286)
+t2 = t0 + (t2_ideal - t0) / eta_c
+p2 = p0 * pr
+say "Station 0: T={t0} K, P={p0} kPa"
+say "Station 2: T={t2} K, P={p2} kPa"
+say "Power: {power} shp, PR: {pr}"

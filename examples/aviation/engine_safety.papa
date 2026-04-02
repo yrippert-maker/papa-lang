@@ -1,0 +1,5 @@
+engine_sn = secret("SN-7901234-TV3")
+military_config = secret("MOD-7B-CLASSIFIED")
+say "Engine: {engine_sn}"
+say "Config: {military_config}"
+say "Secrets NEVER leak in PAPA Lang"
