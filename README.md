@@ -13,6 +13,43 @@
 
 **Язык программирования нового поколения** — построен на анализе 10 ведущих языков, устраняет целые категории багов by design.
 
+## Aviation DSL — Domain-Specific Language for Aircraft Engine Engineering
+
+PAPA-Lang is a purpose-built DSL for aviation MRO, engine design, and diagnostics:
+
+### Engine Design
+```papa
+engine tv3-117vma {
+  type: turboshaft
+  power: 2200 SHP
+  stations: [inlet, compressor, combustor, hpt, lpt, exhaust]
+  sfc_target: 0.280 kg/(SHP·h)
+}
+```
+
+### Diagnostic Profiles (PAPA-SCAN)
+```papa
+scan_profile main_gearbox {
+  channels: [magnetic, thermal, vibration, guided_wave, emat]
+  rule overloaded_gear {
+    condition: vibration.sideband > 1.5 AND thermal.delta > 2.0
+    severity: warning
+  }
+}
+```
+
+### Compliance (AP-145)
+```papa
+compliance_report {
+  template: ap145_standard
+  engine: from_mro_record
+  attach: scan_results
+  export: [pdf, docx]
+}
+```
+
+**37 modules** | **77 tools** | **139+ API routes** | **2 validated engines** (TV3-117VMA, PR-1)
+
 ## Философия
 
 | Проблема существующих языков | Решение в PAPA Lang |
